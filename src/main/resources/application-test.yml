@@ -1,0 +1,21 @@
+server:
+  port: 8081
+spring:
+  datasource:
+    dynamic:
+      #设置默认的数据源或者数据源组,默认值即为master
+      primary: master
+      datasource:
+        master:
+          url: jdbc:mysql://47.106.139.187:3306/TravelFriend?serUnicode=true&characterEncoding=UTF8&useSSL=false
+          username: root
+          password: lxyLXY04/111997
+          driver-class-name: com.mysql.cj.jdbc.Driver
+log:
+  showToWeb : true
+mysys:
+  setting:
+    master-node: true
+login:
+  cache:
+    type: memory #redis or memory

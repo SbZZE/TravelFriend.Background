@@ -1,0 +1,14 @@
+controller:
+    包含与前端交互的方法
+entity:
+    数据库实体类
+dto:
+    自定义实体类
+mapper:
+    包含数据库脚本实现的方法接口
+service:
+    包含逻辑方法接口
+serviceImpl:
+    包含逻辑方法具体实现
+resources/xml:
+    包含数据库脚本(SQL语句)
