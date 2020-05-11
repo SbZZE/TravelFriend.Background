@@ -5,5 +5,5 @@ import com.sbzze.travelfriend.entity.Test;
 
 public interface TestService  {
 
-    public String testInsert(Test tst);
+    int testInsert(Test tst);
 }
