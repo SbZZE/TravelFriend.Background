@@ -3,6 +3,8 @@ package com.sbzze.travelfriend.controller;
 
 import com.sbzze.travelfriend.entity.User;
 import com.sbzze.travelfriend.service.UserService;
+import com.sbzze.travelfriend.util.JwtUtil;
+import com.sbzze.travelfriend.util.ResultViewModelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,27 +15,20 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // 增
-    @PostMapping( value = "/insert")
-    public Object insert( @RequestBody User user ) {
-        return userService.insertUser( user );
-    }
+    // 登录
+    @PostMapping("/login")
+    public Object login( @RequestBody String username, String password ){
 
-    // 改
-    @PostMapping( value = "/update")
-    public Object update( @RequestBody User user ) {
-        return userService.updateUser( user );
-    }
+        User userForBase = userService.findUserByName(username);
 
-    // 删
-    @PostMapping( value = "/delete")
-    public Object delete( @RequestBody User user ) {
-        return userService.deleteUser( user );
-    }
-
-    // 查
-    @GetMapping( value = "/getUserByName")
-    public Object getUserByName( @RequestParam String userName ) {
-        return userService.findUserByName( userName );
+        if( null == userForBase  ) {
+            return ResultViewModelUtil.loginErrorByNotRegister(null);
+        } else {
+            if ( !userForBase.getPassword().equals(password) ){
+                return ResultViewModelUtil.loginErrorByPwd(null);
+            } else {
+                return ResultViewModelUtil.loginSuccess(JwtUtil.getToken(userForBase));
+            }
+        }
     }
 }
