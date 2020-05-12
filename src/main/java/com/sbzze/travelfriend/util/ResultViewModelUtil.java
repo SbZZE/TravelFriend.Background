@@ -10,30 +10,30 @@ import com.sbzze.travelfriend.model.ResultViewModel;
 public class ResultViewModelUtil {
 
 
-    public static ResultViewModel loginSuccess( Object object) {
-        ResultViewModel resultViewModel = new ResultViewModel();
-        resultViewModel.setCode(200);
-        resultViewModel.setMessage("登录成功");
-        resultViewModel.setToken(object);
+    public static ResultViewModel.loginModel loginSuccess( String token ) {
+        ResultViewModel.loginModel loginModel = new ResultViewModel.loginModel();
+        loginModel.setCode(200);
+        loginModel.setMessage("登录成功");
+        loginModel.setToken(token);
 
-        return resultViewModel;
+        return loginModel;
     }
 
-    public static ResultViewModel loginErrorByPwd( Object object) {
-        ResultViewModel resultViewModel = new ResultViewModel();
-        resultViewModel.setCode(201);
-        resultViewModel.setMessage("密码错误");
-        resultViewModel.setToken(object);
+    public static ResultViewModel.loginModel loginErrorByPwd( String token ) {
+        ResultViewModel.loginModel loginModel = new ResultViewModel.loginModel();
+        loginModel.setCode(201);
+        loginModel.setMessage("密码错误");
+        loginModel.setToken(token);
 
-        return resultViewModel;
+        return loginModel;
     }
 
-    public static ResultViewModel loginErrorByNotRegister( Object object) {
-        ResultViewModel resultViewModel = new ResultViewModel();
-        resultViewModel.setCode(202);
-        resultViewModel.setMessage("用户不存在");
-        resultViewModel.setToken(object);
+    public static ResultViewModel.loginModel loginErrorByNotRegister( String token ) {
+        ResultViewModel.loginModel loginModel = new ResultViewModel.loginModel();
+        loginModel.setCode(202);
+        loginModel.setMessage("用户不存在");
+        loginModel.setToken(token);
 
-        return resultViewModel;
+        return loginModel;
     }
 }

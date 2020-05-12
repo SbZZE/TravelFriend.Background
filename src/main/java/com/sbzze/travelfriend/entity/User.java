@@ -23,4 +23,10 @@ public class User {
     @TableField("password")
     private String password;
 
+    @TableField("nickname")
+    private String nickname;
+
+    @TableField("signature")
+    private String signature;
+
 }
