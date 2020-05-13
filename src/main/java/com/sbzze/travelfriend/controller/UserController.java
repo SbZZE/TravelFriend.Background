@@ -3,6 +3,8 @@ package com.sbzze.travelfriend.controller;
 
 import com.sbzze.travelfriend.dto.UserDto;
 import com.sbzze.travelfriend.entity.User;
+import com.sbzze.travelfriend.filter.PassToken;
+import com.sbzze.travelfriend.filter.UserLoginToken;
 import com.sbzze.travelfriend.service.UserService;
 import com.sbzze.travelfriend.util.AccountValidatorUtil;
 import com.sbzze.travelfriend.util.JwtUtil;
@@ -18,6 +20,7 @@ public class UserController {
     private UserService userService;
 
     // 登录
+    @PassToken
     @GetMapping("/login")
     public Object login( String username, String password ){
 
@@ -34,20 +37,21 @@ public class UserController {
     }
 
     // 注册
+    @PassToken
     @PostMapping("/register")
-    public Object register( @RequestBody UserDto userDto ) {
-        User userForBase = userService.findUserByName(userDto.getUsername());
+    public Object register( @RequestBody UserDto.UserRegisterDto userRegisterDto ) {
+        User userForBase = userService.findUserByName(userRegisterDto.getUsername());
         if ( null != userForBase) {
             return ResultViewModelUtil.registerErrorByExist();
         }
 
         //验证是否为邮箱或手机号
-        if ( !AccountValidatorUtil.isEmail(userDto.getUsername()) && !AccountValidatorUtil.isMobile(userDto.getUsername()) ) {
+        if ( !AccountValidatorUtil.isEmail(userRegisterDto.getUsername()) && !AccountValidatorUtil.isMobile(userRegisterDto.getUsername()) ) {
             return ResultViewModelUtil.registerErrorByUsername();
         }
 
-
-        int flag = userService.insertUser( userDto.getUsername(), userDto.getPassword(), userDto.getNickname(), userDto.getSignature() );
+        int flag = userService.insertUser( userRegisterDto.getUsername(), userRegisterDto.getPassword(),
+                                           userRegisterDto.getNickname(), userRegisterDto.getSignature() );
         if ( flag <= 0 ) {
             return ResultViewModelUtil.registerErrorByInsert();
         }
@@ -56,4 +60,39 @@ public class UserController {
         }
 
     }
+
+
+    // 获取个人资料
+    @UserLoginToken
+    @GetMapping("/userInfo")
+    public Object getUserInfo( String username ) {
+
+        User userForBase = userService.findUserByName(username);
+
+        if ( null == userForBase ) {
+            return ResultViewModelUtil.getUserInfoErrorByUserName(null);
+        } else {
+            return ResultViewModelUtil.getUserInfoSuccess(userService.findUserInfoByName(username));
+        }
+    }
+
+
+    // 修改个人资料 (不包含头像)
+    @UserLoginToken
+    @PostMapping("/userInfo")
+    public Object updateUserInfoWithOutAvatar( @RequestBody UserDto.UserInfoWithOutAvatarDto userInfoWithOutAvatarDto ) {
+
+        User userForBase = userService.findUserByName(userInfoWithOutAvatarDto.getUsername());
+        if ( null == userForBase ) {
+            return ResultViewModelUtil.updateUserInfoErrorByUserName(null);
+        }
+
+        int flag = userService.updateUserInfoWithOutAvatar(userInfoWithOutAvatarDto);
+        if ( flag <= 0 ) {
+            return ResultViewModelUtil.updateUserErrorByUpdate();
+        } else {
+            return ResultViewModelUtil.updateUserInfoSuccess();
+        }
+    }
+
 }

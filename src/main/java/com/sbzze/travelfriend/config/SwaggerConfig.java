@@ -25,21 +25,7 @@ import java.util.List;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
-    //public static final String URL = "http://2p277534k9.iok.la:58718/jc/common";
-    
-    @Bean
-    public Docket productPlanApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
-        		.groupName("测试")
-                .apiInfo(apiInfo("测试","v1.0",""))
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("com.sbzze.travelfriend.controller.TestController"))
-                .paths(PathSelectors.any())
-                .build();
-                //.globalOperationParameters(getToken(null));
-    }
 
-    
     @Bean
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
@@ -48,9 +34,8 @@ public class SwaggerConfig {
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.sbzze.travelfriend.controller"))
                 .paths(PathSelectors.any())
-                .build();
-                //.globalOperationParameters(getToken(null));
-                
+                .build()
+                .globalOperationParameters(getToken(null));
     }
     
 

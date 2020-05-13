@@ -29,4 +29,16 @@ public class User {
     @TableField("signature")
     private String signature;
 
+    @TableField("avatar")
+    private String avatar;
+
+    @TableField("gender")
+    private String gender;
+
+    @TableField("birthday")
+    private String birthday;
+
+    @TableField("address")
+    private String address;
+
 }

@@ -1,5 +1,6 @@
 package com.sbzze.travelfriend.serviceImpl;
 
+import com.sbzze.travelfriend.dto.UserDto;
 import com.sbzze.travelfriend.entity.User;
 import com.sbzze.travelfriend.mapper.UserMapper;
 import com.sbzze.travelfriend.service.UserService;
@@ -33,6 +34,36 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
     @Override
     public User findUserById( String id ) {
         return baseMapper.findUserById( id );
+    }
+
+    @Override
+    public UserDto.UserInfoDto findUserInfoByName( String username ) {
+        User user = baseMapper.findUserByName( username );
+        UserDto.UserInfoDto userInfo = new UserDto.UserInfoDto();
+
+        userInfo.setUsername(user.getUsername());
+        userInfo.setNickname(user.getNickname());
+        userInfo.setSignature(user.getSignature());
+        userInfo.setAvatar(user.getAvatar());
+        userInfo.setGender(user.getGender());
+        userInfo.setBirthday(user.getBirthday());
+        userInfo.setAddress(user.getAddress());
+
+        return userInfo;
+    }
+
+    // 改
+    @Override
+    public int updateUserInfoWithOutAvatar( UserDto.UserInfoWithOutAvatarDto updateDto ) {
+        User user = baseMapper.findUserByName( updateDto.getUsername() );
+
+        user.setNickname(updateDto.getNickname());
+        user.setGender(updateDto.getGender());
+        user.setSignature(updateDto.getSignature());
+        user.setBirthday(updateDto.getBirthday());
+        user.setAddress(updateDto.getAddress());
+
+        return baseMapper.updateById(user);
     }
 
 }

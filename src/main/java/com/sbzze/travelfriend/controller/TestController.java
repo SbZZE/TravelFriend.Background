@@ -1,6 +1,7 @@
 package com.sbzze.travelfriend.controller;
 
 import com.sbzze.travelfriend.entity.Test;
+import com.sbzze.travelfriend.filter.PassToken;
 import com.sbzze.travelfriend.service.TestService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
+@PassToken
 @RequestMapping("/test")
 public class TestController {
 

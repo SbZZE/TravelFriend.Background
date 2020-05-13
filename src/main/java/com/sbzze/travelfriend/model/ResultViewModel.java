@@ -18,8 +18,15 @@ public class ResultViewModel {
     }
 
     @Data
-    public static class registerModel {
+    public static class normalModel {
         private Integer code;
         private String message;
+    }
+
+    @Data
+    public static class normalWithDataModel {
+        private Integer code;
+        private String message;
+        private Object data;
     }
 }

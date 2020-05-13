@@ -9,6 +9,15 @@ import com.sbzze.travelfriend.model.ResultViewModel;
  */
 public class ResultViewModelUtil {
 
+    // TODO
+    public static ResultViewModel.normalModel tokenError() {
+        ResultViewModel.normalModel getUserInfoModel = new ResultViewModel.normalModel();
+        getUserInfoModel.setCode(401);
+        getUserInfoModel.setMessage("身份验证失败");
+
+
+        return getUserInfoModel;
+    }
 
     public static ResultViewModel.loginModel loginSuccess( String token ) {
         ResultViewModel.loginModel loginModel = new ResultViewModel.loginModel();
@@ -37,35 +46,80 @@ public class ResultViewModelUtil {
         return loginModel;
     }
 
-    public static ResultViewModel.registerModel registerSuccess() {
-        ResultViewModel.registerModel registerModel = new ResultViewModel.registerModel();
+    public static ResultViewModel.normalModel registerSuccess() {
+        ResultViewModel.normalModel registerModel = new ResultViewModel.normalModel();
         registerModel.setCode(200);
         registerModel.setMessage("注册成功");
 
         return registerModel;
     }
 
-    public static ResultViewModel.registerModel registerErrorByExist() {
-        ResultViewModel.registerModel registerModel = new ResultViewModel.registerModel();
+    public static ResultViewModel.normalModel registerErrorByExist() {
+        ResultViewModel.normalModel registerModel = new ResultViewModel.normalModel();
         registerModel.setCode(201);
         registerModel.setMessage("用户已存在");
 
         return registerModel;
     }
 
-    public static ResultViewModel.registerModel registerErrorByUsername() {
-        ResultViewModel.registerModel registerModel = new ResultViewModel.registerModel();
+    public static ResultViewModel.normalModel registerErrorByUsername() {
+        ResultViewModel.normalModel registerModel = new ResultViewModel.normalModel();
         registerModel.setCode(202);
         registerModel.setMessage("邮箱或手机号不正确");
 
         return registerModel;
     }
 
-    public static ResultViewModel.registerModel registerErrorByInsert() {
-        ResultViewModel.registerModel registerModel = new ResultViewModel.registerModel();
+    public static ResultViewModel.normalModel registerErrorByInsert() {
+        ResultViewModel.normalModel registerModel = new ResultViewModel.normalModel();
         registerModel.setCode(203);
         registerModel.setMessage("注册失败");
 
         return registerModel;
     }
+
+    public static ResultViewModel.normalWithDataModel getUserInfoSuccess( Object object ) {
+        ResultViewModel.normalWithDataModel getUserInfoModel = new ResultViewModel.normalWithDataModel();
+        getUserInfoModel.setCode(200);
+        getUserInfoModel.setMessage("获取成功");
+        getUserInfoModel.setData(object);
+
+        return getUserInfoModel;
+    }
+
+    public static ResultViewModel.normalWithDataModel getUserInfoErrorByUserName( Object object ) {
+        ResultViewModel.normalWithDataModel getUserInfoModel = new ResultViewModel.normalWithDataModel();
+        getUserInfoModel.setCode(201);
+        getUserInfoModel.setMessage("用户名不存在");
+        getUserInfoModel.setData(object);
+
+        return getUserInfoModel;
+    }
+
+    public static ResultViewModel.normalModel updateUserInfoSuccess() {
+        ResultViewModel.normalModel updateUserInfoModel = new ResultViewModel.normalModel();
+        updateUserInfoModel.setCode(200);
+        updateUserInfoModel.setMessage("修改成功");
+
+        return updateUserInfoModel;
+    }
+
+    public static ResultViewModel.normalModel updateUserErrorByUpdate() {
+        ResultViewModel.normalModel updateUserInfoModel = new ResultViewModel.normalModel();
+        updateUserInfoModel.setCode(201);
+        updateUserInfoModel.setMessage("修改失败");
+
+        return updateUserInfoModel;
+    }
+
+    public static ResultViewModel.normalWithDataModel updateUserInfoErrorByUserName( Object object ) {
+        ResultViewModel.normalWithDataModel updateUserInfoModel = new ResultViewModel.normalWithDataModel();
+        updateUserInfoModel.setCode(202);
+        updateUserInfoModel.setMessage("用户名不存在");
+        updateUserInfoModel.setData(object);
+
+        return updateUserInfoModel;
+    }
+
+
 }
