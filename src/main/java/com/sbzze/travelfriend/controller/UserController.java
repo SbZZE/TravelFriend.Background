@@ -18,8 +18,8 @@ public class UserController {
     private UserService userService;
 
     // 登录
-    @PostMapping("/login")
-    public Object login( @RequestBody String username, String password ){
+    @GetMapping("/login")
+    public Object login( String username, String password ){
 
         User userForBase = userService.findUserByName(username);
 
@@ -34,8 +34,8 @@ public class UserController {
     }
 
     // 注册
-    @GetMapping("/register")
-    public Object register( UserDto userDto ) {
+    @PostMapping("/register")
+    public Object register( @RequestBody UserDto userDto ) {
         User userForBase = userService.findUserByName(userDto.getUsername());
         if ( null != userForBase) {
             return ResultViewModelUtil.registerErrorByExist();
