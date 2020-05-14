@@ -7,10 +7,15 @@ import com.sbzze.travelfriend.filter.PassToken;
 import com.sbzze.travelfriend.filter.UserLoginToken;
 import com.sbzze.travelfriend.service.UserService;
 import com.sbzze.travelfriend.util.AccountValidatorUtil;
+import com.sbzze.travelfriend.util.FileUtil;
 import com.sbzze.travelfriend.util.JwtUtil;
 import com.sbzze.travelfriend.util.ResultViewModelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/user")
@@ -62,10 +67,10 @@ public class UserController {
     }
 
 
-    // 获取个人资料
+    // 获取个人资料(不包含头像)
     @UserLoginToken
     @GetMapping("/userInfo")
-    public Object getUserInfo( String username ) {
+    public Object getUserInfoWithOutAvatar( String username ) {
 
         User userForBase = userService.findUserByName(username);
 
@@ -94,5 +99,34 @@ public class UserController {
             return ResultViewModelUtil.updateUserInfoSuccess();
         }
     }
+
+
+    // 修改头像
+    @PassToken
+    @PostMapping("/avatar")
+    public Object updateUserAdatar(@RequestParam String username, @RequestParam MultipartFile image ) {
+
+        if ( image.isEmpty() ) {
+            return ResultViewModelUtil.updateUserAvatarErrorByPicType();
+        }
+
+
+        if ( !FileUtil.isImage(image) ) {
+            return ResultViewModelUtil.updateUserAvatarErrorByPicType();
+        }
+
+        User userForBase = userService.findUserByName(username);
+        if ( null == userForBase ) {
+            return ResultViewModelUtil.updateUserAvatarErrorByUsername();
+        }
+
+        int flag = userService.updateUserAvatar(username, image);
+        if ( flag <= 0) {
+            return ResultViewModelUtil.updateUserAvatarErrorByUpdate();
+        } else {
+            return ResultViewModelUtil.updateUserAvatarSuccess();
+        }
+    }
+
 
 }

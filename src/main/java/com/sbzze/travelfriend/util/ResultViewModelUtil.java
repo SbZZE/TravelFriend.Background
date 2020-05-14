@@ -121,5 +121,36 @@ public class ResultViewModelUtil {
         return updateUserInfoModel;
     }
 
+    public static ResultViewModel.normalModel updateUserAvatarSuccess() {
+        ResultViewModel.normalModel updateAvatarModel = new ResultViewModel.normalModel();
+        updateAvatarModel.setCode(200);
+        updateAvatarModel.setMessage("修改成功");
 
+        return updateAvatarModel;
+    }
+
+    public static ResultViewModel.normalModel updateUserAvatarErrorByUsername() {
+        ResultViewModel.normalModel updateAvatarModel = new ResultViewModel.normalModel();
+        updateAvatarModel.setCode(201);
+        updateAvatarModel.setMessage("用户名不存在");
+
+        return updateAvatarModel;
+    }
+
+
+    public static ResultViewModel.normalModel updateUserAvatarErrorByPicType() {
+        ResultViewModel.normalModel updateAvatarModel = new ResultViewModel.normalModel();
+        updateAvatarModel.setCode(202);
+        updateAvatarModel.setMessage("文件格式错误");
+
+        return updateAvatarModel;
+    }
+
+    public static ResultViewModel.normalModel updateUserAvatarErrorByUpdate() {
+        ResultViewModel.normalModel updateAvatarModel = new ResultViewModel.normalModel();
+        updateAvatarModel.setCode(203);
+        updateAvatarModel.setMessage("修改失败");
+
+        return updateAvatarModel;
+    }
 }

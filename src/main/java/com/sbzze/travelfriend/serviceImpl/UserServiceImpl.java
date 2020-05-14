@@ -4,11 +4,21 @@ import com.sbzze.travelfriend.dto.UserDto;
 import com.sbzze.travelfriend.entity.User;
 import com.sbzze.travelfriend.mapper.UserMapper;
 import com.sbzze.travelfriend.service.UserService;
+import com.sbzze.travelfriend.util.FileNameUtil;
 import com.sbzze.travelfriend.util.UUIDUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.*;
 
 @Service
 public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implements UserService {
+
+
+    @Value("${web.upload-path}")
+    private String path;
+
 
     // 增
     @Override
@@ -37,14 +47,13 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
     }
 
     @Override
-    public UserDto.UserInfoDto findUserInfoByName( String username ) {
+    public UserDto.UserInfoWithOutAvatarDto findUserInfoByName( String username ) {
         User user = baseMapper.findUserByName( username );
-        UserDto.UserInfoDto userInfo = new UserDto.UserInfoDto();
+        UserDto.UserInfoWithOutAvatarDto userInfo = new UserDto.UserInfoWithOutAvatarDto();
 
         userInfo.setUsername(user.getUsername());
         userInfo.setNickname(user.getNickname());
         userInfo.setSignature(user.getSignature());
-        userInfo.setAvatar(user.getAvatar());
         userInfo.setGender(user.getGender());
         userInfo.setBirthday(user.getBirthday());
         userInfo.setAddress(user.getAddress());
@@ -66,4 +75,35 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
         return baseMapper.updateById(user);
     }
 
+    @Override
+    public int updateUserAvatar( String username, MultipartFile file ) {
+        try {
+            String localPath = path;
+            String fileName = file.getOriginalFilename();
+            String realPath = new File(localPath).getAbsolutePath() + "\\" + username + "\\" +FileNameUtil.getFileName(fileName);
+            File dest = new File(realPath);
+
+            if ( !dest.getParentFile().exists()) {
+                dest.getParentFile().mkdirs();
+            }
+            file.transferTo(dest);
+            /*
+            InputStream inputStream = file.getInputStream();
+            OutputStream outputStream = new FileOutputStream(dest);
+
+            byte[] bytes = new byte[1024];
+            int res = 0;
+            while ((res = inputStream.read(bytes)) != -1) {
+                outputStream.write(bytes, 0, res);
+            }
+             */
+            User user = baseMapper.findUserByName(username);
+            user.setAvatar(dest.getPath());
+
+            return baseMapper.updateById(user);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
 }
