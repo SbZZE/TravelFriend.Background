@@ -128,7 +128,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
                 e.printStackTrace();
             }
 
-            String insertFileName = host + ":" + POST + "/" +SON_PATH + "/" + username + "/" + FileNameUtil.getFileName(originalFileName);
+            String insertFileName = host + ":" + POST + SON_PATH + "/" + username + "/" + FileNameUtil.getFileName(originalFileName);
 
             User user = baseMapper.findUserByName(username);
             user.setAvatar(insertFileName);
