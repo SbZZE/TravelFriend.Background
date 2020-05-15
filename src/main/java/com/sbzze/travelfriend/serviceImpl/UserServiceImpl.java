@@ -11,13 +11,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 @Service
 public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implements UserService {
 
 
-    @Value("${web.upload-path}")
-    private String path;
+    //图片存放根路径
+    @Value("${file.rootPath}")
+    private String ROOT_PATH;
+
+    //图片存放根目录下的子目录
+    @Value("${file.sonPath}")
+    private String SON_PATH;
+
+    //获取主机端口
+    @Value("${server.port}")
+    private String POST;
 
 
     // 增
@@ -78,16 +89,28 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
     @Override
     public int updateUserAvatar( String username, MultipartFile file ) {
         try {
+
+            String filePath = ROOT_PATH + SON_PATH;
+            String originalFileName = file.getOriginalFilename();
+            String newFileName = filePath + "/" + username + "/" + FileNameUtil.getFileName(originalFileName);
+            File dest = new File(newFileName);
+
+            if (!dest.getParentFile().exists()) {
+                dest.getParentFile().mkdirs();
+            }
+            //file.transferTo(dest);
+            /*
             String localPath = path;
             String fileName = file.getOriginalFilename();
-            String realPath = new File(localPath).getAbsolutePath() + "\\" + username + "\\" +FileNameUtil.getFileName(fileName);
+            String realPath = new File(localPath).getAbsolutePath() + "/" + username + "/" +FileNameUtil.getFileName(fileName);
             File dest = new File(realPath);
 
             if ( !dest.getParentFile().exists()) {
                 dest.getParentFile().mkdirs();
             }
             file.transferTo(dest);
-            /*
+             */
+
             InputStream inputStream = file.getInputStream();
             OutputStream outputStream = new FileOutputStream(dest);
 
@@ -96,9 +119,19 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
             while ((res = inputStream.read(bytes)) != -1) {
                 outputStream.write(bytes, 0, res);
             }
-             */
+
+
+            String host = null;
+            try {
+                host = InetAddress.getLocalHost().getHostAddress();
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            }
+
+            String insertFileName = host + ":" + POST + "/" +SON_PATH + "/" + username + "/" + FileNameUtil.getFileName(originalFileName);
+
             User user = baseMapper.findUserByName(username);
-            user.setAvatar(dest.getPath());
+            user.setAvatar(insertFileName);
 
             return baseMapper.updateById(user);
         } catch (IOException e) {

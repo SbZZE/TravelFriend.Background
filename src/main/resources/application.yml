@@ -46,5 +46,8 @@ pagehelper:
   params: count=countSql
   row-bounds-with-count: true
   helper-dialect: mysql
-web:
-  upload-path: /user/image/avatar/
+file:
+  rootPath: /root/travelfriend
+  sonPath: /user/image/avatar
+  #rootPath: D:/
+  #sonPath: image

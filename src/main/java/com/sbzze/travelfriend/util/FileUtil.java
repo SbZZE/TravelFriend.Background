@@ -19,19 +19,19 @@ public class FileUtil {
      *
      * @param file              文件
      * @param path              文件存放路径
-     * @param originalFileName  原文件名
+     * @param newFileName  原文件名
      * @return
      */
-    public static boolean upload(MultipartFile file, String path, String originalFileName){
+    public static boolean upload(MultipartFile file, String path, String newFileName){
 
         // 生成新的文件名
-        String realPath = path + FileNameUtil.getFileName(originalFileName);
+        String realPath = path + "/" + newFileName;
 
         File dest = new File(realPath);
 
         //判断文件父目录是否存在
         if(!dest.getParentFile().exists()){
-            dest.getParentFile().mkdir();
+            dest.getParentFile().mkdirs();
         }
 
         try {
