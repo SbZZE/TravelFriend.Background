@@ -6,8 +6,7 @@ import org.apache.commons.io.FileUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * 文件上传工具类
@@ -16,13 +15,13 @@ import java.io.IOException;
 public class FileUtil {
 
     /**
-     *
-     * @param file              文件
-     * @param path              文件存放路径
-     * @param newFileName  原文件名
+     * 上传照片
+     * @param file
+     * @param path
+     * @param newFileName
      * @return
      */
-    public static boolean upload(MultipartFile file, String path, String newFileName){
+    public static boolean upload( MultipartFile file, String path, String newFileName ){
 
         // 生成新的文件名
         String realPath = path + "/" + newFileName;
@@ -71,6 +70,57 @@ public class FileUtil {
         }
 
         return flag;
+    }
+
+    public static void delFile( String dirPath ){
+        File file = new File(dirPath);
+
+        if( file.isFile() ){
+            file.delete();
+        } else {
+            File[] files = file.listFiles();
+            if( files != null ){
+                for (int i = 0; i < files.length; i++){
+                    delFile(files[i].getAbsolutePath());
+                }
+                file.delete();
+            }
+        }
+    }
+
+    public static boolean uploadAvatar( String rootPath, String sonPath, String username, MultipartFile file, String changedFileName) {
+
+        String filePath = rootPath + sonPath;
+        String newFilePath = filePath + "/" + username + "/";
+        String newFileName = newFilePath + changedFileName;
+        File dest = new File(newFileName);
+
+        if (!dest.getParentFile().exists()) {
+            dest.getParentFile().mkdirs();
+        } else {
+            FileUtil.delFile(newFilePath);
+            dest.getParentFile().mkdirs();
+        }
+        try {
+            InputStream inputStream = file.getInputStream();
+            OutputStream outputStream = new FileOutputStream(dest);
+            byte[] bytes = new byte[1024];
+            int res = 0;
+            while ((res = inputStream.read(bytes)) != -1) {
+                outputStream.write(bytes, 0, res);
+            }
+            inputStream.close();
+            outputStream.close();
+
+            return true;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
     }
 
 }

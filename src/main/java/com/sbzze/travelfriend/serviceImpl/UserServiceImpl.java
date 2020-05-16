@@ -5,6 +5,7 @@ import com.sbzze.travelfriend.entity.User;
 import com.sbzze.travelfriend.mapper.UserMapper;
 import com.sbzze.travelfriend.service.UserService;
 import com.sbzze.travelfriend.util.FileNameUtil;
+import com.sbzze.travelfriend.util.FileUtil;
 import com.sbzze.travelfriend.util.UUIDUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -88,55 +89,24 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 
     @Override
     public int updateUserAvatar( String username, MultipartFile file ) {
-        try {
+        String originalFileName = file.getOriginalFilename();
+        String changedFileName = FileNameUtil.getFileName(originalFileName);
 
-            String filePath = ROOT_PATH + SON_PATH;
-            String originalFileName = file.getOriginalFilename();
-            String newFileName = filePath + "/" + username + "/" + FileNameUtil.getFileName(originalFileName);
-            File dest = new File(newFileName);
-
-            if (!dest.getParentFile().exists()) {
-                dest.getParentFile().mkdirs();
-            }
-            //file.transferTo(dest);
-            /*
-            String localPath = path;
-            String fileName = file.getOriginalFilename();
-            String realPath = new File(localPath).getAbsolutePath() + "/" + username + "/" +FileNameUtil.getFileName(fileName);
-            File dest = new File(realPath);
-
-            if ( !dest.getParentFile().exists()) {
-                dest.getParentFile().mkdirs();
-            }
-            file.transferTo(dest);
-             */
-
-            InputStream inputStream = file.getInputStream();
-            OutputStream outputStream = new FileOutputStream(dest);
-
-            byte[] bytes = new byte[1024];
-            int res = 0;
-            while ((res = inputStream.read(bytes)) != -1) {
-                outputStream.write(bytes, 0, res);
-            }
-
-
-            String host = null;
-            try {
-                host = InetAddress.getLocalHost().getHostAddress();
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
-            }
-
-            String insertFileName = host + ":" + POST + SON_PATH + "/" + username + "/" + FileNameUtil.getFileName(originalFileName);
-
-            User user = baseMapper.findUserByName(username);
-            user.setAvatar(insertFileName);
-
-            return baseMapper.updateById(user);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if ( !FileUtil.uploadAvatar(ROOT_PATH, SON_PATH, username, file, changedFileName) ) {
             return -1;
         }
+
+        String host = null;
+        try {
+            host = InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        String insertFileName = host + ":" + POST + SON_PATH + "/" + username + "/" + changedFileName;
+
+        User user = baseMapper.findUserByName(username);
+        user.setAvatar(insertFileName);
+
+        return baseMapper.updateById(user);
     }
 }
