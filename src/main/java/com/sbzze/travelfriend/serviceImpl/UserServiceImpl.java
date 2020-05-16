@@ -31,7 +31,6 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
     @Value("${server.port}")
     private String POST;
 
-
     // 增
     @Override
     public int insertUser( String username, String password, String nickname, String signature ) {
@@ -102,11 +101,22 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
-        String insertFileName = host + ":" + POST + SON_PATH + "/" + username + "/" + changedFileName;
+        String insertFileName = "http://" + host + ":" + POST + "/" + SON_PATH + "/" + username + "/" + changedFileName;
 
         User user = baseMapper.findUserByName(username);
         user.setAvatar(insertFileName);
 
         return baseMapper.updateById(user);
+    }
+
+    @Override
+    public Object downloadAvatar( String username ) {
+        User user = baseMapper.findUserByName(username);
+        String avatarUrl = user.getAvatar();
+        String fileName = avatarUrl.substring(avatarUrl.lastIndexOf("/")+1);
+
+        Object file = FileUtil.download(avatarUrl, fileName);
+
+        return file;
     }
 }

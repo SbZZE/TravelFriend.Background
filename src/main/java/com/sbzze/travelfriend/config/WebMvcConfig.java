@@ -17,9 +17,16 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private String SON_PATH;
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry){
-        String filePath = "file:///" + ROOT_PATH + SON_PATH;
+
+        // linux
+        // file:/root/travelfriend/user/image/avatar/
+        String filePath = "file:" + ROOT_PATH + SON_PATH + "/";
         //指向外部目录
-        registry.addResourceHandler("/user/image/avatar//**").addResourceLocations(filePath);
-        WebMvcConfigurer.super.addResourceHandlers(registry);
+        registry.addResourceHandler("/root/travelfriend/user/image/avatar/**").addResourceLocations(filePath);
+
+        // windows
+        // file:D:/image/
+        //String filePath = "file:" + ROOT_PATH + SON_PATH + "/";
+        //registry.addResourceHandler("/image/**").addResourceLocations(filePath);
     }
 }

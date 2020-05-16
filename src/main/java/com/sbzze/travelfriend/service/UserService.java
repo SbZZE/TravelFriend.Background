@@ -19,4 +19,6 @@ public interface UserService extends IService<User> {
     int updateUserInfoWithOutAvatar(UserInfoWithOutAvatarDto updateDto);
 
     int updateUserAvatar(String username, MultipartFile file);
+
+    Object downloadAvatar(String username);
 }

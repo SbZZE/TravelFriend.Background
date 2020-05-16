@@ -153,4 +153,31 @@ public class ResultViewModelUtil {
 
         return updateAvatarModel;
     }
+
+    public static ResultViewModel.normalWithDataModel getUserAvatarSuccess( Object object ) {
+        ResultViewModel.normalWithDataModel getAvatarModel = new ResultViewModel.normalWithDataModel();
+        getAvatarModel.setCode(200);
+        getAvatarModel.setMessage("获取成功");
+        getAvatarModel.setData(object);
+
+        return getAvatarModel;
+    }
+
+    public static ResultViewModel.normalWithDataModel getUserAvatarErrorByUsername( Object object ) {
+        ResultViewModel.normalWithDataModel getAvatarModel = new ResultViewModel.normalWithDataModel();
+        getAvatarModel.setCode(201);
+        getAvatarModel.setMessage("用户名不存在");
+        getAvatarModel.setData(object);
+
+        return getAvatarModel;
+    }
+
+    public static ResultViewModel.normalWithDataModel getUserAvatarErrorByGet( Object object ) {
+        ResultViewModel.normalWithDataModel getAvatarModel = new ResultViewModel.normalWithDataModel();
+        getAvatarModel.setCode(202);
+        getAvatarModel.setMessage("获取失败");
+        getAvatarModel.setData(object);
+
+        return getAvatarModel;
+    }
 }

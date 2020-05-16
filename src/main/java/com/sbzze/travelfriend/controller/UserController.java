@@ -102,16 +102,16 @@ public class UserController {
 
 
     // 修改头像
-    @PassToken
+    @UserLoginToken
     @PostMapping("/avatar")
-    public Object updateUserAdatar(@RequestParam String username, @RequestParam MultipartFile image ) {
+    public Object updateUserAdatar(@RequestParam String username, @RequestParam MultipartFile avatar ) {
 
-        if ( image.isEmpty() ) {
+        if ( avatar.isEmpty() ) {
             return ResultViewModelUtil.updateUserAvatarErrorByPicType();
         }
 
 
-        if ( !FileUtil.isImage(image) ) {
+        if ( !FileUtil.isImage(avatar) ) {
             return ResultViewModelUtil.updateUserAvatarErrorByPicType();
         }
 
@@ -120,7 +120,7 @@ public class UserController {
             return ResultViewModelUtil.updateUserAvatarErrorByUsername();
         }
 
-        int flag = userService.updateUserAvatar(username, image);
+        int flag = userService.updateUserAvatar(username, avatar);
         if ( flag <= 0) {
             return ResultViewModelUtil.updateUserAvatarErrorByUpdate();
         } else {
@@ -128,5 +128,25 @@ public class UserController {
         }
     }
 
+
+    // 获取头像
+    @UserLoginToken
+    @GetMapping("/avatar")
+    public Object getUserAvatar( String username ) {
+
+        User userForBase = userService.findUserByName(username);
+        if ( null == userForBase ) {
+            return ResultViewModelUtil.getUserAvatarErrorByUsername(null);
+        }
+
+        Object obj = userService.downloadAvatar(username);
+
+        if ( null == obj) {
+            return ResultViewModelUtil.getUserAvatarErrorByGet(null);
+        } else {
+            return ResultViewModelUtil.getUserAvatarSuccess(obj);
+        }
+
+    }
 
 }

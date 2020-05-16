@@ -7,6 +7,8 @@ import org.apache.commons.io.FileUtils;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * 文件上传工具类
@@ -123,4 +125,20 @@ public class FileUtil {
 
     }
 
+    public static Object download( String url, String fileName ) {
+
+        if ( url.isEmpty() ) {
+            return null;
+        }
+        try {
+            URL httpUrl = new URL(url);
+            File tempFile = File.createTempFile(fileName, ".JPG");
+            FileUtils.copyURLToFile(httpUrl, tempFile);
+
+            return tempFile;
+        } catch (IOException e) {
+           e.printStackTrace();
+           return null;
+        }
+    }
 }
