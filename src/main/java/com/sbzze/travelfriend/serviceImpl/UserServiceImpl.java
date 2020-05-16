@@ -101,7 +101,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
-        String insertFileName = "http://" + host + ":" + POST + "/" + SON_PATH + "/" + username + "/" + changedFileName;
+        String insertFileName = "http://" + host + ":" + POST + SON_PATH + "/" + username + "/" + changedFileName;
 
         User user = baseMapper.findUserByName(username);
         user.setAvatar(insertFileName);
