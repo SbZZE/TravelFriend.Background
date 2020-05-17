@@ -110,13 +110,16 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
     }
 
     @Override
-    public Object downloadAvatar( String username ) {
+    public byte[] getAvatar(String username ) {
         User user = baseMapper.findUserByName(username);
+        if ( null == user ) {
+            return null;
+        }
         String avatarUrl = user.getAvatar();
         String fileName = avatarUrl.substring(avatarUrl.lastIndexOf("/")+1);
 
-        Object file = FileUtil.download(avatarUrl, fileName);
+        byte[] fileBytes = FileUtil.downloadFileBytes(avatarUrl, fileName);
 
-        return file;
+        return fileBytes;
     }
 }

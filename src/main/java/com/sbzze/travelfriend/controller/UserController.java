@@ -14,7 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.util.UUID;
 
 @RestController
@@ -132,21 +136,9 @@ public class UserController {
     // 获取头像
     @UserLoginToken
     @GetMapping("/avatar")
-    public Object getUserAvatar( String username ) {
-
-        User userForBase = userService.findUserByName(username);
-        if ( null == userForBase ) {
-            return ResultViewModelUtil.getUserAvatarErrorByUsername(null);
-        }
-
-        Object obj = userService.downloadAvatar(username);
-
-        if ( null == obj) {
-            return ResultViewModelUtil.getUserAvatarErrorByGet(null);
-        } else {
-            return ResultViewModelUtil.getUserAvatarSuccess(obj);
-        }
-
+    @ResponseBody
+    public byte[] getUserAvatar( String username ){
+        return userService.getAvatar(username);
     }
 
 }

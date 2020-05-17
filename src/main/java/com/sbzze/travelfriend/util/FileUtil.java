@@ -5,6 +5,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.apache.commons.io.FileUtils;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.MalformedURLException;
@@ -125,17 +127,27 @@ public class FileUtil {
 
     }
 
-    public static Object download( String url, String fileName ) {
+    public static byte[] downloadFileBytes( String url, String fileName ) {
 
         if ( url.isEmpty() ) {
             return null;
         }
         try {
-            URL httpUrl = new URL(url);
-            File tempFile = File.createTempFile(fileName, ".JPG");
-            FileUtils.copyURLToFile(httpUrl, tempFile);
 
-            return tempFile;
+            URL httpUrl = new URL(url);
+            fileName = fileName.substring(0, fileName.indexOf("."));
+            File tempFile = File.createTempFile(fileName, ".JPG");
+
+            FileUtils.copyURLToFile(httpUrl, tempFile);
+            tempFile.deleteOnExit();
+
+            FileInputStream inputStream = new FileInputStream(tempFile);
+            byte[] bytes = new byte[inputStream.available()];
+
+            inputStream.read(bytes, 0, inputStream.available());
+
+            return bytes;
+
         } catch (IOException e) {
            e.printStackTrace();
            return null;

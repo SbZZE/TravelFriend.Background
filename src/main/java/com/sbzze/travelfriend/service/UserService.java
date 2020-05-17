@@ -7,6 +7,7 @@ import com.sbzze.travelfriend.dto.UserDto.UserInfoWithOutAvatarDto;
 import com.sbzze.travelfriend.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
+
 public interface UserService extends IService<User> {
     int insertUser(String username, String password, String nickname, String signature);
 
@@ -20,5 +21,5 @@ public interface UserService extends IService<User> {
 
     int updateUserAvatar(String username, MultipartFile file);
 
-    Object downloadAvatar(String username);
+    byte[] getAvatar(String username);
 }
