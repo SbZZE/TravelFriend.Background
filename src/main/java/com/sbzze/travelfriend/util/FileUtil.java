@@ -7,9 +7,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.apache.commons.io.FileUtils;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 
 
@@ -152,23 +156,30 @@ public class FileUtil {
      * @param url  地址
      * @return
      */
-    public static byte[] downloadFileBytes( String url) {
+    public static byte[] downloadFileBytes( String url ) {
 
-        if ( url.isEmpty() ) {
+        if (url.isEmpty()) {
             return null;
         }
+
         try {
             URL httpUrl = new URL(url);
             HttpURLConnection conn = (HttpURLConnection)httpUrl.openConnection();
-            //设置超时间为3秒
-            conn.setConnectTimeout(3*1000);
-            //防止屏蔽程序抓取而返回403错误
-            conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+            conn.setRequestMethod("GET");
+            conn.setDoInput(true);
+            conn.setDoOutput(true);
+            // post方式不能使用缓存
+            conn.setUseCaches(false);
+            //连接指定的资源
+            conn.connect();
 
             InputStream inputStream = conn.getInputStream();
+            //ByteArrayOutputStream bos = new ByteArrayOutputStream(1024);
 
-            byte[] bytes = new byte[inputStream.available()];
-            inputStream.read(bytes, 0, inputStream.available());
+            byte[] bytes = new byte[conn.getContentLength()];
+            //int res = 0;
+            while (inputStream.read(bytes, 0, conn.getContentLength()) != -1);
+            //inputStream.read(bytes, 0, conn.getContentLength());
 
             inputStream.close();
             conn.disconnect();
@@ -178,6 +189,7 @@ public class FileUtil {
            e.printStackTrace();
            return null;
         }
+
 
     }
 
