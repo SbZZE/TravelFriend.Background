@@ -1,6 +1,8 @@
 package com.sbzze.travelfriend.util;
 
 
+import net.coobird.thumbnailator.Thumbnails;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import org.apache.commons.io.FileUtils;
 
@@ -81,45 +83,46 @@ public class FileUtil {
     }
 
     /**
-     * 删除文件
+     * 删除文件夹下所有文件（不包含该文件夹）
      * @param dirPath 文件目录
      */
     public static void delFile( String dirPath ){
-        File file = new File(dirPath);
 
-        if( file.isFile() ){
-            file.delete();
-        } else {
-            File[] files = file.listFiles();
-            if( files != null ){
-                for (int i = 0; i < files.length; i++){
-                    delFile(files[i].getAbsolutePath());
-                }
-                file.delete();
+        File file = new File(dirPath);
+        String[] tempList = file.list();
+        File temp = null;
+        for (int i = 0; i < tempList.length; i++) {
+            if (dirPath.endsWith(File.separator)) {
+                temp = new File(dirPath + tempList[i]);
+            } else {
+                temp = new File(dirPath + File.separator + tempList[i]);
+            }
+            if (temp.isFile()) {
+                temp.delete();
+            }
+            if (temp.isDirectory()) {
+                delFile(dirPath + "/" + tempList[i]);// 删除文件夹里面的文件
             }
         }
+
     }
 
     /**
      * 上传头像
-     * @param rootPath        父目录
-     * @param sonPath         子目录
-     * @param username        用户名
+     * @param filePath        文件路径
      * @param file            文件
      * @param changedFileName 新文件名
      * @return
      */
-    public static boolean uploadAvatar( String rootPath, String sonPath, String username, MultipartFile file, String changedFileName) {
+    public static boolean uploadAvatar( String filePath, MultipartFile file, String changedFileName) {
 
-        String filePath = rootPath + sonPath;
-        String newFilePath = filePath + "/" + username + "/";
-        String newFileName = newFilePath + changedFileName;
-        File dest = new File(newFileName);
+        String fileName = filePath + changedFileName;
+        File dest = new File(fileName);
 
         if (!dest.getParentFile().exists()) {
             dest.getParentFile().mkdirs();
         } else {
-            FileUtil.delFile(newFilePath);
+            FileUtil.delFile(filePath);
             dest.getParentFile().mkdirs();
         }
         try {
@@ -146,18 +149,14 @@ public class FileUtil {
 
     /**
      * 下载文件流
-     * @param url       地址
-     * @param fileName  文件名
+     * @param url  地址
      * @return
      */
-    public static byte[] downloadFileBytes( String url, String fileName ) {
+    public static byte[] downloadFileBytes( String url) {
 
         if ( url.isEmpty() ) {
             return null;
         }
-
-        InputStream inputStream = null;
-
         try {
             URL httpUrl = new URL(url);
             HttpURLConnection conn = (HttpURLConnection)httpUrl.openConnection();
@@ -165,17 +164,8 @@ public class FileUtil {
             conn.setConnectTimeout(3*1000);
             //防止屏蔽程序抓取而返回403错误
             conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
-            /*
-            fileName = fileName.substring(0, fileName.indexOf("."));
-            File tempFile = File.createTempFile(fileName, ".JPG");
 
-            FileUtils.copyURLToFile(httpUrl, tempFile);
-            tempFile.deleteOnExit();
-            File tempFile = new File(httpUrl.getFile());
-
-            inputStream = new FileInputStream(tempFile);
-            */
-            inputStream = conn.getInputStream();
+            InputStream inputStream = conn.getInputStream();
 
             byte[] bytes = new byte[inputStream.available()];
             inputStream.read(bytes, 0, inputStream.available());
@@ -191,5 +181,30 @@ public class FileUtil {
 
     }
 
-    // 压缩图片
+    /**
+     * 压缩上传图片
+     * @param file
+     * @param filePath
+     * @param changedFileName
+     * @param prefix
+     * @return
+     */
+    public static boolean compressFile( MultipartFile file, String filePath, String changedFileName, String prefix ) {
+
+        String fileName = filePath + prefix + changedFileName;
+        System.out.println(fileName);
+
+        File tempFile = new File(fileName);
+        try {
+            Thumbnails.of(file.getInputStream())
+                      .scale(1f)
+                      .outputQuality(0.2f)
+                      .toFile(tempFile);
+
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

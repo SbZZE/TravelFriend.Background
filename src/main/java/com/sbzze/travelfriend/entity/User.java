@@ -41,4 +41,7 @@ public class User {
     @TableField("address")
     private String address;
 
+    @TableField("compress_avatar")
+    private String compressAvatar;
+
 }

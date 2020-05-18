@@ -31,6 +31,9 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
     @Value("${server.port}")
     private String POST;
 
+    @Value("${file.prefix}")
+    private String PREFIX;
+
     // 增
     @Override
     public int insertUser( String username, String password, String nickname, String signature ) {
@@ -90,10 +93,16 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
     public int updateUserAvatar( String username, MultipartFile file ) {
         String originalFileName = file.getOriginalFilename();
         String changedFileName = FileNameUtil.getFileName(originalFileName);
+        String filePath = ROOT_PATH + SON_PATH + "/" + username + "/";
 
-        if ( !FileUtil.uploadAvatar(ROOT_PATH, SON_PATH, username, file, changedFileName) ) {
+        if ( !FileUtil.uploadAvatar(filePath, file, changedFileName) ) {
             return -1;
         }
+
+        //压缩图片并上传
+       if ( !FileUtil.compressFile(file, filePath, changedFileName, PREFIX) ) {
+           return -1;
+       }
 
         String host = null;
         try {
@@ -102,23 +111,22 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
             e.printStackTrace();
         }
         String insertFileName = "http://" + host + ":" + POST + SON_PATH + "/" + username + "/" + changedFileName;
-
+        String insertCompressFileName = "http://" + host + ":" + POST + SON_PATH + "/" + username + "/" + PREFIX + changedFileName;
         User user = baseMapper.findUserByName(username);
         user.setAvatar(insertFileName);
-
+        user.setCompressAvatar(insertCompressFileName);
         return baseMapper.updateById(user);
     }
 
     @Override
-    public byte[] getAvatar(String username ) {
+    public byte[] getAvatar( String username ) {
         User user = baseMapper.findUserByName(username);
         if ( null == user ) {
             return null;
         }
         String avatarUrl = user.getAvatar();
-        String fileName = avatarUrl.substring(avatarUrl.lastIndexOf("/")+1);
 
-        byte[] fileBytes = FileUtil.downloadFileBytes(avatarUrl, fileName);
+        byte[] fileBytes = FileUtil.downloadFileBytes(avatarUrl);
 
         return fileBytes;
     }

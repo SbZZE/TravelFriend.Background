@@ -47,7 +47,8 @@ pagehelper:
   row-bounds-with-count: true
   helper-dialect: mysql
 file:
-  rootPath: /root/travelfriend
-  sonPath: /user/image/avatar
-  #rootPath: D:/
-  #sonPath: image
+  #rootPath: /root/travelfriend
+  #sonPath: /user/image/avatar
+  rootPath: D:/
+  sonPath: image
+  prefix: COMPRESS_
