@@ -181,6 +181,7 @@ public class FileUtil {
             inputStream.read(bytes, 0, inputStream.available());
 
             inputStream.close();
+            conn.disconnect();
 
             return bytes;
         } catch (IOException e) {
