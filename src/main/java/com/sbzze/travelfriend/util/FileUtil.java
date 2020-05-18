@@ -5,12 +5,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.apache.commons.io.FileUtils;
 
 import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.MalformedURLException;
+import java.net.HttpURLConnection;
 import java.net.URL;
+
 
 /**
  * 文件上传工具类
@@ -19,7 +18,7 @@ import java.net.URL;
 public class FileUtil {
 
     /**
-     * 上传照片
+     * 上传文件
      * @param file
      * @param path
      * @param newFileName
@@ -50,6 +49,11 @@ public class FileUtil {
         }
     }
 
+    /**
+     * 判断是否为图片
+     * @param multipartFile
+     * @return
+     */
     public static boolean isImage( MultipartFile multipartFile ) {
 
         File file = new File(multipartFile.getOriginalFilename());
@@ -76,6 +80,10 @@ public class FileUtil {
         return flag;
     }
 
+    /**
+     * 删除文件
+     * @param dirPath 文件目录
+     */
     public static void delFile( String dirPath ){
         File file = new File(dirPath);
 
@@ -92,6 +100,15 @@ public class FileUtil {
         }
     }
 
+    /**
+     * 上传头像
+     * @param rootPath        父目录
+     * @param sonPath         子目录
+     * @param username        用户名
+     * @param file            文件
+     * @param changedFileName 新文件名
+     * @return
+     */
     public static boolean uploadAvatar( String rootPath, String sonPath, String username, MultipartFile file, String changedFileName) {
 
         String filePath = rootPath + sonPath;
@@ -127,30 +144,51 @@ public class FileUtil {
 
     }
 
+    /**
+     * 下载文件流
+     * @param url       地址
+     * @param fileName  文件名
+     * @return
+     */
     public static byte[] downloadFileBytes( String url, String fileName ) {
 
         if ( url.isEmpty() ) {
             return null;
         }
-        try {
 
+        InputStream inputStream = null;
+
+        try {
             URL httpUrl = new URL(url);
+            HttpURLConnection conn = (HttpURLConnection)httpUrl.openConnection();
+            //设置超时间为3秒
+            conn.setConnectTimeout(3*1000);
+            //防止屏蔽程序抓取而返回403错误
+            conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+            /*
             fileName = fileName.substring(0, fileName.indexOf("."));
             File tempFile = File.createTempFile(fileName, ".JPG");
 
             FileUtils.copyURLToFile(httpUrl, tempFile);
             tempFile.deleteOnExit();
+            File tempFile = new File(httpUrl.getFile());
 
-            FileInputStream inputStream = new FileInputStream(tempFile);
+            inputStream = new FileInputStream(tempFile);
+            */
+            inputStream = conn.getInputStream();
+
             byte[] bytes = new byte[inputStream.available()];
-
             inputStream.read(bytes, 0, inputStream.available());
 
-            return bytes;
+            inputStream.close();
 
+            return bytes;
         } catch (IOException e) {
            e.printStackTrace();
            return null;
         }
+
     }
+
+    // 压缩图片
 }
