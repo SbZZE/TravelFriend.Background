@@ -137,8 +137,14 @@ public class UserController {
     @UserLoginToken
     @GetMapping("/avatar")
     @ResponseBody
-    public byte[] getUserAvatar( String username ){
-        return userService.getAvatar(username);
+    public byte[] getUserAvatar( String username, String isCompress ){
+        if (isCompress.equals("true")) {
+            return userService.getCompressAvatar(username);
+        } else if (isCompress.equals("false")){
+            return userService.getAvatar(username);
+        } else {
+            return null;
+        }
     }
 
 }

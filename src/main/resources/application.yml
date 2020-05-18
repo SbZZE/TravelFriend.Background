@@ -37,6 +37,8 @@ spring:
         filters: stat
         use-global-data-source-stat: true
 mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
   mapper-locations: classpath*:xml/*.xml
   global-config:
     id-type: 3
@@ -47,8 +49,8 @@ pagehelper:
   row-bounds-with-count: true
   helper-dialect: mysql
 file:
-  #rootPath: /root/travelfriend
-  #sonPath: /user/image/avatar
-  rootPath: D:/
-  sonPath: image
+  rootPath: /root/travelfriend
+  sonPath: /user/image/avatar
+  #rootPath: D:/
+  #sonPath: image
   prefix: COMPRESS_

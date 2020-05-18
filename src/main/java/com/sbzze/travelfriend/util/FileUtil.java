@@ -192,7 +192,6 @@ public class FileUtil {
     public static boolean compressFile( MultipartFile file, String filePath, String changedFileName, String prefix ) {
 
         String fileName = filePath + prefix + changedFileName;
-        System.out.println(fileName);
 
         File tempFile = new File(fileName);
         try {

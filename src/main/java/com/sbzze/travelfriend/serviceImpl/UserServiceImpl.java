@@ -130,4 +130,18 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 
         return fileBytes;
     }
+
+    @Override
+    public byte[] getCompressAvatar(String username ) {
+        User user = baseMapper.findUserByName(username);
+        if ( null == user ) {
+            return null;
+        }
+
+        String compressAvatarUrl = user.getCompressAvatar();
+
+        byte[] fileBytes = FileUtil.downloadFileBytes(compressAvatarUrl);
+
+        return fileBytes;
+    }
 }
