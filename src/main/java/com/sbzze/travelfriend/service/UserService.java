@@ -24,4 +24,6 @@ public interface UserService extends IService<User> {
     byte[] getAvatar(String username);
 
     byte[] getCompressAvatar(String username);
+
+    int deleteUser(String username);
 }

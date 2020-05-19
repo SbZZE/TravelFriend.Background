@@ -180,4 +180,5 @@ public class ResultViewModelUtil {
 
         return getAvatarModel;
     }
+
 }

@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -143,5 +142,10 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
         byte[] fileBytes = FileUtil.downloadFileBytes(compressAvatarUrl);
 
         return fileBytes;
+    }
+    //删
+    public int deleteUser(String username){
+
+        return baseMapper.deleteById(username);
     }
 }

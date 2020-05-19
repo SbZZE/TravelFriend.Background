@@ -6,20 +6,10 @@ import com.sbzze.travelfriend.entity.User;
 import com.sbzze.travelfriend.filter.PassToken;
 import com.sbzze.travelfriend.filter.UserLoginToken;
 import com.sbzze.travelfriend.service.UserService;
-import com.sbzze.travelfriend.util.AccountValidatorUtil;
-import com.sbzze.travelfriend.util.FileUtil;
-import com.sbzze.travelfriend.util.JwtUtil;
-import com.sbzze.travelfriend.util.ResultViewModelUtil;
+import com.sbzze.travelfriend.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/user")
@@ -144,6 +134,23 @@ public class UserController {
             return userService.getAvatar(username);
         } else {
             return null;
+        }
+    }
+
+    //注销账号
+    @UserLoginToken
+    @DeleteMapping("/cancel")
+    public Object cancel(String username){
+        User userForBase = userService.findUserByName(username);
+        if ( null == userForBase) {
+            return CancelModelUtil.cancelErrorByNotExist();
+        }
+        int flag = userService.deleteUser(username);
+        if ( flag <= 0){
+            return CancelModelUtil.cancelErrorByDelete();
+        }
+        else {
+            return CancelModelUtil.cancelSuccess();
         }
     }
 
