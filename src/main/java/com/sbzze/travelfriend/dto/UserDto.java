@@ -6,7 +6,7 @@ import lombok.Data;
 public class UserDto {
 
     @Data
-    public class UserRegisterDto {
+    public static class UserRegisterDto {
         private String username;
         private String password;
         private String nickname;
