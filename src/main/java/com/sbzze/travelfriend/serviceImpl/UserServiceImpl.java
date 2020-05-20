@@ -145,7 +145,8 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
     }
     //删
     public int deleteUser(String username){
+        User user = baseMapper.findUserByName(username);
 
-        return baseMapper.deleteById(username);
+        return baseMapper.deleteById(user.getId());
     }
 }
