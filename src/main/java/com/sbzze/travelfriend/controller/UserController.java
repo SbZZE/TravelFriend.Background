@@ -1,25 +1,15 @@
 package com.sbzze.travelfriend.controller;
 
-
 import com.sbzze.travelfriend.dto.UserDto;
 import com.sbzze.travelfriend.entity.User;
 import com.sbzze.travelfriend.filter.PassToken;
 import com.sbzze.travelfriend.filter.UserLoginToken;
 import com.sbzze.travelfriend.service.UserService;
-import com.sbzze.travelfriend.util.AccountValidatorUtil;
-import com.sbzze.travelfriend.util.FileUtil;
-import com.sbzze.travelfriend.util.JwtUtil;
-import com.sbzze.travelfriend.util.ResultViewModelUtil;
+import com.sbzze.travelfriend.util.*;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/user")
@@ -27,6 +17,10 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    RabbitTemplate rabbitTemplate;
+
 
     // 登录
     @PassToken
@@ -100,6 +94,7 @@ public class UserController {
         if ( flag <= 0 ) {
             return ResultViewModelUtil.updateUserErrorByUpdate();
         } else {
+            rabbitTemplate.convertAndSend("fanoutExchange", null, MsgUtil.setMsg(userInfoWithOutAvatarDto.getUsername()));
             return ResultViewModelUtil.updateUserInfoSuccess();
         }
     }
@@ -128,6 +123,7 @@ public class UserController {
         if ( flag <= 0) {
             return ResultViewModelUtil.updateUserAvatarErrorByUpdate();
         } else {
+            rabbitTemplate.convertAndSend("fanoutExchange", null, MsgUtil.setMsg(username));
             return ResultViewModelUtil.updateUserAvatarSuccess();
         }
     }
