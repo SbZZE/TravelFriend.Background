@@ -7,32 +7,12 @@ import com.sbzze.travelfriend.service.UserService;
 import com.sbzze.travelfriend.util.FileNameUtil;
 import com.sbzze.travelfriend.util.FileUtil;
 import com.sbzze.travelfriend.util.UUIDUtil;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 @Service
 public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implements UserService {
-
-
-    //图片存放根路径
-    @Value("${file.rootPath}")
-    private String ROOT_PATH;
-
-    //图片存放根目录下的子目录
-    @Value("${file.sonPath}")
-    private String SON_PATH;
-
-    //获取主机端口
-    @Value("${server.port}")
-    private String POST;
-
-    @Value("${file.prefix}")
-    private String PREFIX;
 
     // 增
     @Override
@@ -47,6 +27,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
             user.setNickname(nickname);
         }
         user.setSignature(signature);
+        user.setGender(WOMAN);
 
         return baseMapper.insert( user );
     }
@@ -93,31 +74,31 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
     public int updateUserAvatar( String username, MultipartFile file ) {
         String originalFileName = file.getOriginalFilename();
         String changedFileName = FileNameUtil.getFileName(originalFileName);
-        String filePath = ROOT_PATH + SON_PATH + "/" + username + "/";
+        //String filePath = ROOT_PATH + SON_PATH + "/" + AVATAR + "/" + username + "/";
+        String filePath = FileNameUtil.getFilePath(ROOT_PATH, SON_PATH, AVATAR, username);
 
-        if ( !FileUtil.uploadAvatar(filePath, file, changedFileName) ) {
+        if ( !FileUtil.uploadByDeleteExistFile(filePath, file, changedFileName) ) {
             return -1;
         }
 
         //压缩图片并上传
-       if ( !FileUtil.compressFile(file, filePath, changedFileName, PREFIX) ) {
+       if ( !FileUtil.compressFile(file, filePath, changedFileName, PREFIX, 1f, 0.2f) ) {
            return -1;
        }
 
-        String host = null;
-        try {
-            host = InetAddress.getLocalHost().getHostAddress();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-        String insertFileName = "http://" + host + ":" + POST + SON_PATH + "/" + username + "/" + changedFileName;
-        String insertCompressFileName = "http://" + host + ":" + POST + SON_PATH + "/" + username + "/" + PREFIX + changedFileName;
+        //String insertFileName = "http://" + host + ":" + POST + SON_PATH + "/" + AVATAR + "/" + username + "/" + changedFileName;
+        //String insertCompressFileName = "http://" + host + ":" + POST + SON_PATH + "/" + AVATAR + "/" + username + "/" + PREFIX + changedFileName;
+        String urlPath = FileNameUtil.getUrlPath(POST, SON_PATH, AVATAR, username);
+        String insertFileName = urlPath + changedFileName;
+        String insertCompressFileName = urlPath + PREFIX + changedFileName;
+
         User user = baseMapper.findUserByName(username);
         user.setAvatar(insertFileName);
         user.setCompressAvatar(insertCompressFileName);
         return baseMapper.updateById(user);
     }
 
+    // 查
     @Override
     public byte[] getAvatar( String username ) {
         User user = baseMapper.findUserByName(username);
@@ -144,4 +125,6 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 
         return fileBytes;
     }
+
+
 }

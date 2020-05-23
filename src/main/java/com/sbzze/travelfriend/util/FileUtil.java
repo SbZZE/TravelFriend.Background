@@ -25,28 +25,25 @@ public class FileUtil {
 
     /**
      * 上传文件
-     * @param file
-     * @param path
-     * @param newFileName
+     * @param file 源文件
+     * @param dest 目标文件
      * @return
      */
-    public static boolean upload( MultipartFile file, String path, String newFileName ){
-
-        // 生成新的文件名
-        String realPath = path + "/" + newFileName;
-
-        File dest = new File(realPath);
-
-        //判断文件父目录是否存在
-        if(!dest.getParentFile().exists()){
-            dest.getParentFile().mkdirs();
-        }
+    public static boolean upload( MultipartFile file, File dest ){
 
         try {
-            //保存文件
-            file.transferTo(dest);
+            InputStream inputStream = file.getInputStream();
+            OutputStream outputStream = new FileOutputStream(dest);
+            byte[] bytes = new byte[1024];
+            int res = 0;
+            while ((res = inputStream.read(bytes)) != -1) {
+                outputStream.write(bytes, 0, res);
+            }
+            inputStream.close();
+            outputStream.close();
+
             return true;
-        } catch (IllegalStateException e) {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
             return false;
         } catch (IOException e) {
@@ -112,13 +109,13 @@ public class FileUtil {
     }
 
     /**
-     * 上传头像
+     * 通过删除已存在文件夹的方式上传图片（适用于只需保存一张图片的情况）
      * @param filePath        文件路径
      * @param file            文件
      * @param changedFileName 新文件名
      * @return
      */
-    public static boolean uploadAvatar( String filePath, MultipartFile file, String changedFileName) {
+    public static boolean uploadByDeleteExistFile( String filePath, MultipartFile file, String changedFileName) {
 
         String fileName = filePath + changedFileName;
         File dest = new File(fileName);
@@ -129,25 +126,8 @@ public class FileUtil {
             FileUtil.delFile(filePath);
             dest.getParentFile().mkdirs();
         }
-        try {
-            InputStream inputStream = file.getInputStream();
-            OutputStream outputStream = new FileOutputStream(dest);
-            byte[] bytes = new byte[1024];
-            int res = 0;
-            while ((res = inputStream.read(bytes)) != -1) {
-                outputStream.write(bytes, 0, res);
-            }
-            inputStream.close();
-            outputStream.close();
 
-            return true;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return false;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
+        return upload(file, dest);
 
     }
 
@@ -201,21 +181,41 @@ public class FileUtil {
      * @param prefix
      * @return
      */
-    public static boolean compressFile( MultipartFile file, String filePath, String changedFileName, String prefix ) {
+    public static boolean compressFile( MultipartFile file, String filePath, String changedFileName, String prefix, float scale, float outputQuality ) {
 
         String fileName = filePath + prefix + changedFileName;
 
         File tempFile = new File(fileName);
         try {
             Thumbnails.of(file.getInputStream())
-                      .scale(1f)
-                      .outputQuality(0.2f)
+                      .scale(scale)
+                      .outputQuality(outputQuality)
                       .toFile(tempFile);
 
+            file.getInputStream().close();
             return true;
         } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
+    }
+
+
+    /**
+     * 上传相册
+     * @param filePath
+     * @param file
+     * @param changedFileName
+     * @return
+     */
+    public static boolean uploadAlbum( String filePath, MultipartFile file, String changedFileName ) {
+        String fileName = filePath + changedFileName;
+        File dest = new File(fileName);
+
+        if (!dest.getParentFile().exists()) {
+            dest.getParentFile().mkdirs();
+        }
+
+        return upload(file, dest);
     }
 }
