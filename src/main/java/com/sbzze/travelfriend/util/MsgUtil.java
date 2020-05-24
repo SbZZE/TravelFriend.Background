@@ -1,22 +1,27 @@
 package com.sbzze.travelfriend.util;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 public class MsgUtil {
 
-    public static Map setMsg( String username ){
-        Map msg = new HashMap();
-        String msgId = String.valueOf(UUID.randomUUID());
-        String msgData = "Info changed by user " + username;
-        String createTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    public enum Type {
+        AVATAR,
+        INFO
+    }
 
-        msg.put("msgId", msgId);
-        msg.put("msgData", msgData);
-        msg.put("createTime", createTime);
+
+    public static Map setMsg( String username, Enum type, String content ){
+        Map msg = new HashMap();
+
+        String id = String.valueOf(UUID.randomUUID());
+
+        msg.put("id", id);
+        msg.put("type", type);
+        msg.put("account", username);
+        msg.put("content", content);
 
         return msg;
     }

@@ -94,7 +94,8 @@ public class UserController {
         if ( flag <= 0 ) {
             return ResultViewModelUtil.updateUserErrorByUpdate();
         } else {
-            rabbitTemplate.convertAndSend("fanoutExchange", null, MsgUtil.setMsg(userInfoWithOutAvatarDto.getUsername()));
+            String content = "changed";
+            rabbitTemplate.convertAndSend("fanoutExchange", null, MsgUtil.setMsg(userInfoWithOutAvatarDto.getUsername(), MsgUtil.Type.INFO, content));
             return ResultViewModelUtil.updateUserInfoSuccess();
         }
     }
@@ -123,7 +124,8 @@ public class UserController {
         if ( flag <= 0) {
             return ResultViewModelUtil.updateUserAvatarErrorByUpdate();
         } else {
-            rabbitTemplate.convertAndSend("fanoutExchange", null, MsgUtil.setMsg(username));
+            String content = "changed";
+            rabbitTemplate.convertAndSend("fanoutExchange", null, MsgUtil.setMsg(username, MsgUtil.Type.AVATAR, content));
             return ResultViewModelUtil.updateUserAvatarSuccess();
         }
     }
