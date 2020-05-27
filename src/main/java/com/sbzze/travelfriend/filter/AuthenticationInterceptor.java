@@ -51,6 +51,11 @@ public class AuthenticationInterceptor extends BaseInterceptor {
                     setResponse(httpServletRequest, httpServletResponse, "400","无token，请登录");
                     return false;
                 }
+
+                if ( null == userService.findUserByName(username) ) {
+                    setResponse(httpServletRequest, httpServletResponse, "402","用户不存在");
+                    return false;
+                }
                 // 获取 token 中的 user id
                 String userId;
                 try {
@@ -61,7 +66,7 @@ public class AuthenticationInterceptor extends BaseInterceptor {
                 User user = userService.findUserById(userId);
 
                 if ( !userService.findUserByName(username).getId().equals(userId) ) {
-                    setResponse(httpServletRequest, httpServletResponse, "400","token与用户不匹配");
+                    setResponse(httpServletRequest, httpServletResponse, "403","token与用户不匹配");
                     return false;
                 }
                 // 验证 token

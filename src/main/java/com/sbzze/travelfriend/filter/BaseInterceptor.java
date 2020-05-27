@@ -23,7 +23,8 @@ public abstract class BaseInterceptor extends HandlerInterceptorAdapter {
                             HttpServletResponse response, String messageKey,String message) {
 
         response.setContentType("application/json;charset=UTF-8");
-        try (Writer writer = response.getWriter()) {
+        try  {
+            Writer writer = response.getWriter();
             Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("code", messageKey);
             resultMap.put("message", message);
@@ -31,6 +32,7 @@ public abstract class BaseInterceptor extends HandlerInterceptorAdapter {
             logger(request, resultMap);
             JSON.writeJSONString(writer, resultMap);
             writer.flush();
+            writer.close();
         } catch (IOException e) {
             log.error("respose 设置操作异常：" + e);
         }
