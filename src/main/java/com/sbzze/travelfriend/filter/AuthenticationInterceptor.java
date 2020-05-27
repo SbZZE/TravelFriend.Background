@@ -27,7 +27,8 @@ public class AuthenticationInterceptor extends BaseInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object) throws Exception {
         String token = httpServletRequest.getHeader("token");// 从 http 请求头中取出 token
-        System.out.println(token);
+        String username = httpServletRequest.getParameter("username");
+
         // 如果不是映射到方法直接通过
         if (!(object instanceof HandlerMethod)) {
             return true;
@@ -59,7 +60,7 @@ public class AuthenticationInterceptor extends BaseInterceptor {
                 }
                 User user = userService.findUserById(userId);
 
-                if ( userTokenService.findUserTokenByUserId(userId).getToken() != token ) {
+                if ( !userService.findUserByName(username).getId().equals(userId) ) {
                     setResponse(httpServletRequest, httpServletResponse, "400","token与用户不匹配");
                     return false;
                 }
