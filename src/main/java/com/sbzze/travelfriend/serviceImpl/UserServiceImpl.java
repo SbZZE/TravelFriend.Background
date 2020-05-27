@@ -21,7 +21,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
         user.setId(UUIDUtil.getUUID());
         user.setUsername(username);
         user.setPassword(password);
-        if (null == nickname) {
+        if ( nickname.isEmpty() ) {
             user.setNickname(username);
         } else {
             user.setNickname(nickname);

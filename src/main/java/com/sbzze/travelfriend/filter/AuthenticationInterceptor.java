@@ -7,6 +7,7 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.sbzze.travelfriend.entity.User;
 import com.sbzze.travelfriend.service.UserService;
+import com.sbzze.travelfriend.service.UserTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -16,13 +17,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 
-public class AuthenticationInterceptor implements HandlerInterceptor {
+public class AuthenticationInterceptor extends BaseInterceptor {
     @Autowired
     UserService userService;
+
+    @Autowired
+    UserTokenService userTokenService;
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object) throws Exception {
         String token = httpServletRequest.getHeader("token");// 从 http 请求头中取出 token
+        System.out.println(token);
         // 如果不是映射到方法直接通过
         if (!(object instanceof HandlerMethod)) {
             return true;
@@ -41,8 +46,9 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             UserLoginToken userLoginToken = method.getAnnotation(UserLoginToken.class);
             if (userLoginToken.required()) {
                 // 执行认证
-                if (token == null) {
-                    throw new RuntimeException("无token，请重新登录");
+                if ( token.isEmpty() ) {
+                    setResponse(httpServletRequest, httpServletResponse, "400","无token，请登录");
+                    return false;
                 }
                 // 获取 token 中的 user id
                 String userId;
@@ -52,8 +58,10 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                     throw new RuntimeException("401");
                 }
                 User user = userService.findUserById(userId);
-                if (user == null) {
-                    throw new RuntimeException("用户不存在，请重新登录");
+
+                if ( userTokenService.findUserTokenByUserId(userId).getToken() != token ) {
+                    setResponse(httpServletRequest, httpServletResponse, "400","token与用户不匹配");
+                    return false;
                 }
                 // 验证 token
                 JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getPassword())).build();
