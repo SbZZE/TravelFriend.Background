@@ -2,6 +2,8 @@ package com.sbzze.travelfriend.util;
 
 import com.sbzze.travelfriend.model.ResultViewModel;
 
+import java.util.List;
+
 /**
  * 响应数据封装类
  *
@@ -154,31 +156,37 @@ public class ResultViewModelUtil {
         return updateAvatarModel;
     }
 
-    public static ResultViewModel.normalWithDataModel getUserAvatarSuccess( Object object ) {
-        ResultViewModel.normalWithDataModel getAvatarModel = new ResultViewModel.normalWithDataModel();
-        getAvatarModel.setCode(200);
-        getAvatarModel.setMessage("获取成功");
-        getAvatarModel.setData(object);
+    public static ResultViewModel.normalModel addAlbumSuccess() {
+        ResultViewModel.normalModel addAlbumModel = new ResultViewModel.normalModel();
+        addAlbumModel.setCode(200);
+        addAlbumModel.setMessage("添加成功");
 
-        return getAvatarModel;
+        return addAlbumModel;
     }
 
-    public static ResultViewModel.normalWithDataModel getUserAvatarErrorByUsername( Object object ) {
-        ResultViewModel.normalWithDataModel getAvatarModel = new ResultViewModel.normalWithDataModel();
-        getAvatarModel.setCode(201);
-        getAvatarModel.setMessage("用户名不存在");
-        getAvatarModel.setData(object);
+    public static ResultViewModel.normalModel addAlbumErrorByAlbumExist() {
+        ResultViewModel.normalModel addAlbumModel = new ResultViewModel.normalModel();
+        addAlbumModel.setCode(201);
+        addAlbumModel.setMessage("相册已存在");
 
-        return getAvatarModel;
+        return addAlbumModel;
     }
 
-    public static ResultViewModel.normalWithDataModel getUserAvatarErrorByGet( Object object ) {
-        ResultViewModel.normalWithDataModel getAvatarModel = new ResultViewModel.normalWithDataModel();
-        getAvatarModel.setCode(202);
-        getAvatarModel.setMessage("获取失败");
-        getAvatarModel.setData(object);
+    public static ResultViewModel.normalModel addAlbumErrorByCover() {
+        ResultViewModel.normalModel addAlbumModel = new ResultViewModel.normalModel();
+        addAlbumModel.setCode(202);
+        addAlbumModel.setMessage("封面上传失败");
 
-        return getAvatarModel;
+        return addAlbumModel;
+    }
+
+    public static ResultViewModel.normalWithDataModel getAlbumInfoSuccess( Object object ) {
+        ResultViewModel.normalWithDataModel getAlbumInfoModel = new ResultViewModel.normalWithDataModel();
+        getAlbumInfoModel.setCode(200);
+        getAlbumInfoModel.setMessage("成功");
+        getAlbumInfoModel.setData(object);
+
+        return getAlbumInfoModel;
     }
 
 }

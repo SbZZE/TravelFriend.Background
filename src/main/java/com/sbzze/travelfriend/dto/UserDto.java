@@ -1,6 +1,7 @@
 package com.sbzze.travelfriend.dto;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 
 public class UserDto {
@@ -32,6 +33,20 @@ public class UserDto {
         private String gender;
         private String birthday;
         private String address;
+    }
+
+    @Data
+    public static class UserAlbumDto {
+        private String username;
+        private String albumname;
+        private String introduction;
+        private MultipartFile cover;
+    }
+
+    @Data
+    public static class UserAlbumInfoDto {
+        private String albumname;
+        private String introduction;
     }
 
 

@@ -22,7 +22,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         // file:/root/travelfriend/user/image/avatar/
         String filePath = "file:" + ROOT_PATH + SON_PATH + "/";
         //指向外部目录
-        registry.addResourceHandler("/user/image/avatar/**").addResourceLocations(filePath);
+        registry.addResourceHandler("/user/image/**").addResourceLocations(filePath);
 
         // windows
         // file:D:/image/
