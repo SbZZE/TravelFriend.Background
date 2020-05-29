@@ -2,9 +2,11 @@ package com.sbzze.travelfriend.controller;
 
 import com.sbzze.travelfriend.dto.UserDto;
 import com.sbzze.travelfriend.entity.User;
+import com.sbzze.travelfriend.entity.UserToken;
 import com.sbzze.travelfriend.filter.PassToken;
 import com.sbzze.travelfriend.filter.UserLoginToken;
 import com.sbzze.travelfriend.service.UserService;
+import com.sbzze.travelfriend.service.UserTokenService;
 import com.sbzze.travelfriend.util.*;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserTokenService userTokenService;
 
     @Autowired
     RabbitTemplate rabbitTemplate;
@@ -35,7 +40,13 @@ public class UserController {
         if ( !userForBase.getPassword().equals(password) ){
             return ResultViewModelUtil.loginErrorByPwd(null);
         } else {
-            return ResultViewModelUtil.loginSuccess(JwtUtil.getToken(userForBase));
+            String token = JwtUtil.getToken(userForBase);
+            if ( null == userTokenService.findUserTokenByUserId(userForBase.getId()) ) {
+                userTokenService.insertUserToken(userForBase.getId(), token);
+            } else {
+                userTokenService.updateUserToken(userForBase.getId(), token);
+            }
+            return ResultViewModelUtil.loginSuccess(token);
         }
     }
 
@@ -54,7 +65,7 @@ public class UserController {
         }
 
         int flag = userService.insertUser( userRegisterDto.getUsername(), userRegisterDto.getPassword(),
-                                           userRegisterDto.getNickname(), userRegisterDto.getSignature() );
+                                           userRegisterDto.getNickname());
         if ( flag <= 0 ) {
             return ResultViewModelUtil.registerErrorByInsert();
         }

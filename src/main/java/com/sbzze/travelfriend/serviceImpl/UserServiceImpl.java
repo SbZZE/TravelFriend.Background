@@ -17,17 +17,16 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 
     // 增
     @Override
-    public int insertUser( String username, String password, String nickname, String signature ) {
+    public int insertUser( String username, String password, String nickname ) {
         User user = new User();
         user.setId(UUIDUtil.getUUID());
         user.setUsername(username);
         user.setPassword(password);
-        if (null == nickname) {
+        if ( nickname.isEmpty() ) {
             user.setNickname(username);
         } else {
             user.setNickname(nickname);
         }
-        user.setSignature(signature);
         user.setGender(WOMAN);
 
         return baseMapper.insert( user );
