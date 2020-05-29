@@ -8,14 +8,15 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.sbzze.travelfriend.entity.User;
 import com.sbzze.travelfriend.service.UserService;
 import com.sbzze.travelfriend.service.UserTokenService;
+import com.sbzze.travelfriend.util.RequestHandleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
+import java.util.Map;
 
 public class AuthenticationInterceptor extends BaseInterceptor {
     @Autowired
@@ -26,55 +27,71 @@ public class AuthenticationInterceptor extends BaseInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object) throws Exception {
-        String token = httpServletRequest.getHeader("token");// 从 http 请求头中取出 token
-        String username = httpServletRequest.getParameter("username");
 
         // 如果不是映射到方法直接通过
         if (!(object instanceof HandlerMethod)) {
             return true;
         }
+
+
+        //检查是否有passtoken注释，有则跳过认证
         HandlerMethod handlerMethod = (HandlerMethod) object;
         Method method = handlerMethod.getMethod();
-        //检查是否有passtoken注释，有则跳过认证
+
         if (method.isAnnotationPresent(PassToken.class)) {
             PassToken passToken = method.getAnnotation(PassToken.class);
             if (passToken.required()) {
                 return true;
             }
         }
+
+
         //检查有没有需要用户权限的注解
+        String token = httpServletRequest.getHeader("token");// 从 http 请求头中取出 token
+        Map<String, Object> reqMap = RequestHandleUtil.getReqParam(httpServletRequest);
+        String username = String.valueOf(reqMap.get("username"));
+
         if (method.isAnnotationPresent(UserLoginToken.class)) {
+
             UserLoginToken userLoginToken = method.getAnnotation(UserLoginToken.class);
+
             if (userLoginToken.required()) {
-                // 执行认证
+                // token认证
                 if ( token.isEmpty() ) {
                     setResponse(httpServletRequest, httpServletResponse, "400","无token，请登录");
                     return false;
                 }
 
+                // 用户是否存在
                 if ( null == userService.findUserByName(username) ) {
                     setResponse(httpServletRequest, httpServletResponse, "402","用户不存在");
                     return false;
                 }
-                // 获取 token 中的 user id
+
+                // 获取token中的userId
                 String userId;
                 try {
                     userId = JWT.decode(token).getAudience().get(0);
                 } catch (JWTDecodeException j) {
-                    throw new RuntimeException("401");
+                    setResponse(httpServletRequest, httpServletResponse, "401","token有误");
+                    return false;
                 }
-                User user = userService.findUserById(userId);
 
+                // token与用户是否匹配
                 if ( !userService.findUserByName(username).getId().equals(userId) ) {
                     setResponse(httpServletRequest, httpServletResponse, "403","token与用户不匹配");
                     return false;
                 }
+
                 // 验证 token
+                User user = userService.findUserById(userId);
+
                 JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getPassword())).build();
                 try {
                     jwtVerifier.verify(token);
                 } catch (JWTVerificationException e) {
-                    throw new RuntimeException("401");
+                    setResponse(httpServletRequest, httpServletResponse, "401","token有误");
+                    return false;
                 }
                 return true;
             }
