@@ -65,7 +65,7 @@ public class UserController {
         }
 
         int flag = userService.insertUser( userRegisterDto.getUsername(), userRegisterDto.getPassword(),
-                                           userRegisterDto.getNickname(), userRegisterDto.getSignature() );
+                                           userRegisterDto.getNickname());
         if ( flag <= 0 ) {
             return ResultViewModelUtil.registerErrorByInsert();
         }

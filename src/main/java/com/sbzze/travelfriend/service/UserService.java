@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 public interface UserService extends IService<User> {
-    int insertUser(String username, String password, String nickname, String signature);
+    int insertUser(String username, String password, String nickname);
 
     User findUserByName(String username);
 
