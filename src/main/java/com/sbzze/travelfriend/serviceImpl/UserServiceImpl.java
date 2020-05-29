@@ -10,11 +10,7 @@ import com.sbzze.travelfriend.util.UUIDUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-<<<<<<< HEAD
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-=======
->>>>>>> master
+
 
 @Service
 public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implements UserService {
@@ -130,15 +126,11 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 
         return fileBytes;
     }
-<<<<<<< HEAD
+
     //删
     public int deleteUser(String username){
         User user = baseMapper.findUserByName(username);
 
         return baseMapper.deleteById(user.getId());
     }
-=======
-
-
->>>>>>> master
 }

@@ -6,10 +6,7 @@ import com.sbzze.travelfriend.filter.PassToken;
 import com.sbzze.travelfriend.filter.UserLoginToken;
 import com.sbzze.travelfriend.service.UserService;
 import com.sbzze.travelfriend.util.*;
-<<<<<<< HEAD
-=======
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
->>>>>>> master
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
