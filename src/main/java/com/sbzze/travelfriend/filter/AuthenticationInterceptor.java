@@ -8,7 +8,6 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.sbzze.travelfriend.entity.User;
 import com.sbzze.travelfriend.service.UserService;
 import com.sbzze.travelfriend.service.UserTokenService;
-import com.sbzze.travelfriend.util.RequestHandleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,7 +15,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
-import java.util.Map;
 
 public class AuthenticationInterceptor extends BaseInterceptor {
     @Autowired
@@ -48,8 +46,7 @@ public class AuthenticationInterceptor extends BaseInterceptor {
 
         //检查有没有需要用户权限的注解
         String token = httpServletRequest.getHeader("token");// 从 http 请求头中取出 token
-        Map<String, Object> reqMap = RequestHandleUtil.getReqParam(httpServletRequest);
-        String username = String.valueOf(reqMap.get("username"));
+
 
         if (method.isAnnotationPresent(UserLoginToken.class)) {
 
@@ -62,24 +59,12 @@ public class AuthenticationInterceptor extends BaseInterceptor {
                     return false;
                 }
 
-                // 用户是否存在
-                if ( null == userService.findUserByName(username) ) {
-                    setResponse(httpServletRequest, httpServletResponse, "402","用户不存在");
-                    return false;
-                }
-
                 // 获取token中的userId
                 String userId;
                 try {
                     userId = JWT.decode(token).getAudience().get(0);
                 } catch (JWTDecodeException j) {
                     setResponse(httpServletRequest, httpServletResponse, "401","token有误");
-                    return false;
-                }
-
-                // token与用户是否匹配
-                if ( !userService.findUserByName(username).getId().equals(userId) ) {
-                    setResponse(httpServletRequest, httpServletResponse, "403","token与用户不匹配");
                     return false;
                 }
 
