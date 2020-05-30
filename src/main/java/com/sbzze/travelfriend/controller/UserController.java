@@ -2,7 +2,6 @@ package com.sbzze.travelfriend.controller;
 
 import com.sbzze.travelfriend.dto.UserDto;
 import com.sbzze.travelfriend.entity.User;
-import com.sbzze.travelfriend.entity.UserToken;
 import com.sbzze.travelfriend.filter.PassToken;
 import com.sbzze.travelfriend.filter.UserLoginToken;
 import com.sbzze.travelfriend.service.UserService;
@@ -115,7 +114,7 @@ public class UserController {
     // 修改头像
     @UserLoginToken
     @PostMapping("/avatar")
-    public Object updateUserAdatar(@RequestParam String username, @RequestParam MultipartFile avatar ) {
+    public Object updateUserAvatar(@RequestParam String username, @RequestParam MultipartFile avatar ) {
 
         if ( avatar.isEmpty() ) {
             return ResultViewModelUtil.updateUserAvatarErrorByPicType();
