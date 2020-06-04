@@ -16,5 +16,6 @@ import java.util.List;
 @Mapper
 public interface TeamMapper extends BaseMapper<Team> {
     List<Team> findTeamByUserId(@Param("userId") String userId);
+    List<Team> findTeamByUserNameInMembers(@Param("username") String userName);
     Team findTeamById(@Param("id") String id);
 }

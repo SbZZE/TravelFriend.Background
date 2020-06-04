@@ -40,4 +40,5 @@ public class Team {
     @TableField("member")
     private char member[];
 
+
 }

@@ -56,10 +56,16 @@ public class TeamServiceImpl extends BaseServiceImpl<TeamMapper, Team> implement
         byte[] fileBytes = FileUtil.downloadFileBytes(avatarUrl);
         return fileBytes;
     }
+    @Override
+    public List<Team> findTeamByUserNameInMembers(String userName){
+        return baseMapper.findTeamByUserNameInMembers(userName);
+    }
 
     //获取某用户所有的团队信息
     @Override
     public List<Object> getTeamInfo(String userid){
+        User user = userService.findUserById(userid);
+        List<Team> teamsFromMember = findTeamByUserNameInMembers(user.getUsername());
         List<Team> teams = findTeamByUserId(userid);
         TeamDto.TeamInfoWithOutAvatarDto teamInfoWithOutAvatarDto = new TeamDto.TeamInfoWithOutAvatarDto();
         List<Object> teamInfoWithOutAvatarDtos = new ArrayList<>();
@@ -68,6 +74,14 @@ public class TeamServiceImpl extends BaseServiceImpl<TeamMapper, Team> implement
             teamInfoWithOutAvatarDto.setTeamname(team.getTeamName());
             teamInfoWithOutAvatarDto.setIntroduction(team.getIntroduction());
             teamInfoWithOutAvatarDto.setIsleader(true);
+
+            teamInfoWithOutAvatarDtos.add(teamInfoWithOutAvatarDto);
+        }
+        for (Team team : teamsFromMember){
+            teamInfoWithOutAvatarDto.setTeamid(team.getId());
+            teamInfoWithOutAvatarDto.setTeamname(team.getTeamName());
+            teamInfoWithOutAvatarDto.setIntroduction(team.getIntroduction());
+            teamInfoWithOutAvatarDto.setIsleader(false);
 
             teamInfoWithOutAvatarDtos.add(teamInfoWithOutAvatarDto);
         }

@@ -15,6 +15,7 @@ public class TeamDto {
         private String username;
         private String teamname;
         private String introduction;
+        private boolean isleader;
     }
     @Data
     public static class TeamInfoWithOutAvatarDto{

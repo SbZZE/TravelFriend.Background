@@ -20,6 +20,8 @@ public interface TeamService extends IService<Team> {
 
     Team findTeamByTeamId(String id);
 
+    List<Team> findTeamByUserNameInMembers(String username);//查找某用户参与的团队
+
     List<Object> getTeamInfo(String userid);//获取某用户所有的团队信息
 
     int updateTeamInfoWithOutAvatar(TeamDto.TeamInfoWithOutAvatarDto updateDto);//修改团队信息不包括头像
