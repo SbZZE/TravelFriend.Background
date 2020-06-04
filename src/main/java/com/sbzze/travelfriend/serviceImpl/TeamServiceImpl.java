@@ -110,6 +110,9 @@ public class TeamServiceImpl extends BaseServiceImpl<TeamMapper, Team> implement
         TeamDto.TeamMemberInfoDto teamMemberInfoDto = new TeamDto.TeamMemberInfoDto();
         char members[] = team.getMember();
         List<Team> teamMemberInfoDtos = new ArrayList<>();
+        if (members == null){
+            return null;
+        }
         for (int i = members.length ; i>=0 ; i--){
             teamMemberInfoDto.setUsername(teamMemberInfoDto.getUsername());
             teamMemberInfoDto.setNickname(teamMemberInfoDto.getNickname());

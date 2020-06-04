@@ -9,7 +9,6 @@ import com.sbzze.travelfriend.service.TeamService;
 import com.sbzze.travelfriend.service.UserService;
 import com.sbzze.travelfriend.service.UserTokenService;
 import com.sbzze.travelfriend.util.FileUtil;
-import com.sbzze.travelfriend.util.MsgUtil;
 import com.sbzze.travelfriend.util.TeamResultViewModelUtil;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,11 +78,6 @@ public class TeamController {
 
             }
         }
-//        if (null != teamForBase && teamForBase.size() != 0){
-//
-//                return TeamResultViewModelUtil.CreateErrorByExit();
-//
-//        }
         int flag = teamService.insertTeam(teamCreateDto.getUsername() , teamCreateDto.getTeamname() , teamCreateDto.getIntroduction());
         if (flag <= 0){
             return TeamResultViewModelUtil.CreateErrorByExit();
@@ -105,8 +99,8 @@ public class TeamController {
         if (flag <= 0){
             return TeamResultViewModelUtil.updateTeamInfoError();
         }else {
-            String content = "changed";
-            rabbitTemplate.convertAndSend("fanoutExchange", null, MsgUtil.setMsg(teamInfoWithOutAvatarDto.getTeamname(), MsgUtil.Type.INFO, content));
+//            String content = "changed";
+//            rabbitTemplate.convertAndSend("fanoutExchange", null, MsgUtil.setMsg(teamInfoWithOutAvatarDto.getTeamname(), MsgUtil.Type.INFO, content));
             return TeamResultViewModelUtil.updateTeamInfoSuccess();
         }
 
@@ -131,8 +125,8 @@ public class TeamController {
         if (flag<=0){
             return TeamResultViewModelUtil.updateTeamAvatarError();
         }else {
-            String content = "changed";
-            rabbitTemplate.convertAndSend("fanoutExchange", null, MsgUtil.setMsg(teamid, MsgUtil.Type.AVATAR, content));
+//            String content = "changed";
+//            rabbitTemplate.convertAndSend("fanoutExchange", null, MsgUtil.setMsg(teamid, MsgUtil.Type.AVATAR, content));
             return TeamResultViewModelUtil.updateTeamAvatarSuccess();
         }
 
