@@ -68,6 +68,8 @@ public class TeamServiceImpl extends BaseServiceImpl<TeamMapper, Team> implement
             teamInfoWithOutAvatarDto.setTeamname(team.getTeamName());
             teamInfoWithOutAvatarDto.setIntroduction(team.getIntroduction());
             teamInfoWithOutAvatarDto.setIsleader(true);
+
+            teamInfoWithOutAvatarDtos.add(teamInfoWithOutAvatarDto);
         }
         return teamInfoWithOutAvatarDtos;
 
