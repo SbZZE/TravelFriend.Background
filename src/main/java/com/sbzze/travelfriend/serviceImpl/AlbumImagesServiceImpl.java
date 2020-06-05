@@ -29,7 +29,8 @@ public class AlbumImagesServiceImpl extends BaseServiceImpl<AlbumImagesMapper, A
     //TODO 更新用户相册图片
     @Override
     public int updateUserAlbum(String username, MultipartFile[] files, String albumname ) {
-        String filePath = FileNameUtil.getFilePath(ROOT_PATH, SON_PATH, ALBUM, username);
+        String signName = USER + "/" + ALBUM;
+        String filePath = FileNameUtil.getFilePath(ROOT_PATH, SON_PATH, signName, username);
         String originalFilePath = filePath + "orginal" + "/";
         String compressFilePath = filePath + "compress" + "/";
         for (MultipartFile file : files) {
@@ -39,7 +40,7 @@ public class AlbumImagesServiceImpl extends BaseServiceImpl<AlbumImagesMapper, A
             FileUtil.compressFile(file, compressFilePath, changedFileName, PREFIX, 1f, 0.2f);
         }
 
-        String urlPath = FileNameUtil.getUrlPath(POST, SON_PATH, ALBUM, username);
+        String urlPath = FileNameUtil.getUrlPath(POST, SON_PATH, signName, username);
         String insertFilePath = urlPath + "original" + "/" ;
         String insertCompressFilePath = urlPath +"compress" + "/";
 

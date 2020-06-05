@@ -75,7 +75,8 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
         String originalFileName = file.getOriginalFilename();
         String changedFileName = FileNameUtil.getFileName(originalFileName);
         //String filePath = ROOT_PATH + SON_PATH + "/" + AVATAR + "/" + username + "/";
-        String filePath = FileNameUtil.getFilePath(ROOT_PATH, SON_PATH, AVATAR, username);
+        String signName = USER + "/" + AVATAR;
+        String filePath = FileNameUtil.getFilePath(ROOT_PATH, SON_PATH, signName, username);
 
         if ( !FileUtil.uploadByDeleteExistFile(filePath, file, changedFileName) ) {
             return -1;
@@ -88,7 +89,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 
         //String insertFileName = "http://" + host + ":" + POST + SON_PATH + "/" + AVATAR + "/" + username + "/" + changedFileName;
         //String insertCompressFileName = "http://" + host + ":" + POST + SON_PATH + "/" + AVATAR + "/" + username + "/" + PREFIX + changedFileName;
-        String urlPath = FileNameUtil.getUrlPath(POST, SON_PATH, AVATAR, username);
+        String urlPath = FileNameUtil.getUrlPath(POST, SON_PATH, signName, username);
         String insertFileName = urlPath + changedFileName;
         String insertCompressFileName = urlPath + PREFIX + changedFileName;
 

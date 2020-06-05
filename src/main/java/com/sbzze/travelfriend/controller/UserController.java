@@ -114,8 +114,7 @@ public class UserController {
     // 修改头像
     @UserLoginToken
     @PostMapping("/avatar")
-    public Object updateUserAvatar(@RequestParam String username, @RequestParam MultipartFile avatar ) {
-
+    public Object updateUserAdatar(@RequestParam String username, @RequestBody MultipartFile avatar ) {
         if ( avatar.isEmpty() ) {
             return ResultViewModelUtil.updateUserAvatarErrorByPicType();
         }

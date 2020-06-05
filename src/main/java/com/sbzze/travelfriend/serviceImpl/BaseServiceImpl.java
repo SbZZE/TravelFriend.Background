@@ -30,8 +30,10 @@ public class BaseServiceImpl<M extends BaseMapper<T>,T> extends ServiceImpl<M,T>
     public String AVATAR = "avatar";
     public String ALBUM = "album";
     public String COVER = "cover";
-    public String TEAM = "team";
+
     public String USER = "user";
+    public String TEAM = "team";
+
 
     @Override
     public PageInfo<T> findPageList(Wrapper<T> wrappe, Integer pageNum, Integer pageSize) {

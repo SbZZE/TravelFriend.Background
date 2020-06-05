@@ -35,9 +35,7 @@ public class UserAlbumServiceImpl extends BaseServiceImpl<UserAlbumMapper, UserA
 
     @Override
     public boolean isAlbumExist( String username, String albumname ) {
-        System.out.println(username);
         User user = userService.findUserByName(username);
-        System.out.println(user);
         UserAlbum album = findAlbumByUserIdAndAlbumName(user.getId(), albumname);
         if ( null == album ) {
             return false;
@@ -52,7 +50,8 @@ public class UserAlbumServiceImpl extends BaseServiceImpl<UserAlbumMapper, UserA
 
         String originalFileName = cover.getOriginalFilename();
         String changedFileName = FileNameUtil.getFileName(originalFileName);
-        String filePath = FileNameUtil.getFilePath(ROOT_PATH, SON_PATH, ALBUM + "/" + COVER, username);
+        String signName = USER + "/" + ALBUM;
+        String filePath = FileNameUtil.getFilePath(ROOT_PATH, SON_PATH, signName + "/" + COVER, username);
 
         if ( !FileUtil.compressFile(cover, filePath, changedFileName, PREFIX, 0.5f, 0.5f) ) {
             //TODO 状态码修改
@@ -65,7 +64,7 @@ public class UserAlbumServiceImpl extends BaseServiceImpl<UserAlbumMapper, UserA
         album.setAlbumname(albumname);
         album.setIntroduction(introduction);
 
-        String urlPath = FileNameUtil.getUrlPath(POST, SON_PATH, ALBUM + "/" + COVER, username);
+        String urlPath = FileNameUtil.getUrlPath(POST, SON_PATH, signName + "/" + COVER, username);
         String insertFileName = urlPath + PREFIX + changedFileName;
         album.setCover(insertFileName);
 
