@@ -102,7 +102,7 @@ public class TeamServiceImpl extends BaseServiceImpl<TeamMapper, Team> implement
     public int updateTeamAvatar(String teamid, MultipartFile file){
         String originalFileName = file.getOriginalFilename();
         String changedFileName = FileNameUtil.getFileName(originalFileName);
-        String filePath = FileNameUtil.getFilePath(ROOT_PATH, SON_PATH, AVATAR, teamid);
+        String filePath = FileNameUtil.getFilePath(ROOT_PATH, SON_PATH, TEAM + "/" + AVATAR , teamid);
         if ( !FileUtil.uploadByDeleteExistFile(filePath, file, changedFileName) ) {
             return -1;
         }
@@ -111,7 +111,7 @@ public class TeamServiceImpl extends BaseServiceImpl<TeamMapper, Team> implement
         if ( !FileUtil.compressFile(file, filePath, changedFileName, PREFIX, 1f, 0.2f) ) {
             return -1;
         }
-        String urlPath = FileNameUtil.getUrlPath(POST, SON_PATH, AVATAR, teamid);
+        String urlPath = FileNameUtil.getUrlPath(POST, SON_PATH, TEAM + "/" + AVATAR , teamid);
         String insertFileName = urlPath + changedFileName;
         String insertCompressFileName = urlPath + PREFIX + changedFileName;
         Team team = baseMapper.findTeamById(teamid);

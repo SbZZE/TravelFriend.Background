@@ -13,6 +13,7 @@
             <arg column="avatar" javaType="java.lang.String" jdbcType="VARCHAR" />
             <arg column="compress_avatar" javaType="java.lang.String" jdbcType="VARCHAR" />
             <arg column="introduction" javaType="java.lang.String" jdbcType="VARCHAR" />
+            <arg column="member" javaType="java.lang.String" jdbcType="VARCHAR" />
         </constructor>
     </resultMap>
 

@@ -13,7 +13,7 @@ public class BaseServiceImpl<M extends BaseMapper<T>,T> extends ServiceImpl<M,T>
     @Value("${file.rootPath}")
     public String ROOT_PATH;
 
-    //图片存放根目录下的子目录 /user/image
+    //图片存放根目录下的子目录 /image
     @Value("${file.sonPath}")
     public String SON_PATH;
 
@@ -30,6 +30,8 @@ public class BaseServiceImpl<M extends BaseMapper<T>,T> extends ServiceImpl<M,T>
     public String AVATAR = "avatar";
     public String ALBUM = "album";
     public String COVER = "cover";
+    public String TEAM = "team";
+    public String USER = "user";
 
     @Override
     public PageInfo<T> findPageList(Wrapper<T> wrappe, Integer pageNum, Integer pageSize) {
