@@ -19,10 +19,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry){
 
         // linux
-        // file:/root/travelfriend/user/image/avatar/
+        // file:/root/travelfriend/image/
         String filePath = "file:" + ROOT_PATH + SON_PATH + "/";
         //指向外部目录
-        registry.addResourceHandler("/user/image/**").addResourceLocations(filePath);
+        registry.addResourceHandler("/image/**").addResourceLocations(filePath);
 
         // windows
         // file:D:/image/

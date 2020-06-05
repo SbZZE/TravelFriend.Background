@@ -50,7 +50,7 @@ pagehelper:
   helper-dialect: mysql
 file:
   rootPath: /root/travelfriend
-  sonPath: /user/image
+  sonPath: /image
   #rootPath: D:/
   #sonPath: image
   prefix: COMPRESS_
