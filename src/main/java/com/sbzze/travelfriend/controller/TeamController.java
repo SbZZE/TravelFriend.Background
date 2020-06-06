@@ -3,7 +3,6 @@ package com.sbzze.travelfriend.controller;
 import com.sbzze.travelfriend.dto.TeamDto;
 import com.sbzze.travelfriend.entity.Team;
 import com.sbzze.travelfriend.entity.User;
-import com.sbzze.travelfriend.filter.PassToken;
 import com.sbzze.travelfriend.filter.UserLoginToken;
 import com.sbzze.travelfriend.service.TeamService;
 import com.sbzze.travelfriend.service.UserService;
@@ -42,7 +41,7 @@ public class TeamController {
     private String teams[] = null;
 
     //获取该用户的所有团队
-    @PassToken
+    @UserLoginToken
     @GetMapping("/teams")
     public Object teams(String username){
         User userForBase = userService.findUserByName(username);

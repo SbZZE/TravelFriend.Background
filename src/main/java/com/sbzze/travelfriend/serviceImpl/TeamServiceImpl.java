@@ -52,7 +52,7 @@ public class TeamServiceImpl extends BaseServiceImpl<TeamMapper, Team> implement
         if (null == team){
             return null;
         }
-        String avatarUrl = team.getAvatar();
+        String avatarUrl = team.getCompressAvatar();
         byte[] fileBytes = FileUtil.downloadFileBytes(avatarUrl);
         return fileBytes;
     }
