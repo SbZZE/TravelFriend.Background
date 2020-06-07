@@ -58,8 +58,14 @@ public class TeamController {
     @UserLoginToken
     @GetMapping("/avatar")
     @ResponseBody
-    public byte[] getTeamAvatar(String username){
-        return teamService.getTeamAvatar(username);
+    public byte[] getTeamAvatar(String teamid , String isCompress){
+        if (isCompress.equals("true")) {
+            return teamService.getCompressTeamAvatar(teamid);
+        } else if (isCompress.equals("false")){
+            return teamService.getTeamAvatar(teamid);
+        } else {
+            return null;
+        }
     }
 
     //创建团队

@@ -26,11 +26,6 @@
       where
       id=#{id}
     </select>
-    <select id="findTeamByUserNameInMembers" resultType="com.sbzze.travelfriend.entity.Team">
-        SELECT * FROM user_team
-      where
-      member=#{userName}
-    </select>
     <select id="findUserByTeamId" resultType="com.sbzze.travelfriend.entity.Team">
         SELECT * FROM user_team
         where

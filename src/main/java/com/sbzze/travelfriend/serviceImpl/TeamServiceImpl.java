@@ -56,15 +56,22 @@ public class TeamServiceImpl extends BaseServiceImpl<TeamMapper, Team> implement
         if (null == team) {
             return null;
         }
-        String avatarUrl = team.getCompressAvatar();
+        String avatarUrl = team.getAvatar();
         byte[] fileBytes = FileUtil.downloadFileBytes(avatarUrl);
         return fileBytes;
     }
 
     @Override
-    public List<Team> findTeamByUserNameInMembers(String userName) {
-        return baseMapper.findTeamByUserNameInMembers(userName);
+    public byte[] getCompressTeamAvatar(String teamid){
+        Team team = baseMapper.findTeamById(teamid);
+        if (null == team){
+            return null;
+        }
+        String avatarUrl = team.getCompressAvatar();
+        byte[] fileBytes = FileUtil.downloadFileBytes(avatarUrl);
+        return fileBytes;
     }
+
 
 //    //查找某团队所有的用户
 //    @Override
@@ -75,26 +82,20 @@ public class TeamServiceImpl extends BaseServiceImpl<TeamMapper, Team> implement
     //获取某用户所有的团队信息
     @Override
     public List<Object> getTeamInfo(String userid) {
-        User user = userService.findUserById(userid);
-        List<Team> teamsFromMember = findTeamByUserNameInMembers(user.getUsername());
+        int i = 0;
         List<Team> teams = findTeamByUserId(userid);
         TeamDto.TeamInfoWithOutAvatarDto teamInfoWithOutAvatarDto = new TeamDto.TeamInfoWithOutAvatarDto();
         List<Object> teamInfoWithOutAvatarDtos = new ArrayList<>();
         for (Team team : teams) {
+            teamInfoWithOutAvatarDto = new TeamDto.TeamInfoWithOutAvatarDto();
             teamInfoWithOutAvatarDto.setTeamid(team.getId());
             teamInfoWithOutAvatarDto.setTeamname(team.getTeamName());
             teamInfoWithOutAvatarDto.setIntroduction(team.getIntroduction());
             teamInfoWithOutAvatarDto.setIsleader(true);
 
-            teamInfoWithOutAvatarDtos.add(teamInfoWithOutAvatarDto);
-        }
-        for (Team team : teamsFromMember) {
-            teamInfoWithOutAvatarDto.setTeamid(team.getId());
-            teamInfoWithOutAvatarDto.setTeamname(team.getTeamName());
-            teamInfoWithOutAvatarDto.setIntroduction(team.getIntroduction());
-            teamInfoWithOutAvatarDto.setIsleader(false);
+            teamInfoWithOutAvatarDtos.add(i , teamInfoWithOutAvatarDto);
+            i++;
 
-            teamInfoWithOutAvatarDtos.add(teamInfoWithOutAvatarDto);
         }
         return teamInfoWithOutAvatarDtos;
 
