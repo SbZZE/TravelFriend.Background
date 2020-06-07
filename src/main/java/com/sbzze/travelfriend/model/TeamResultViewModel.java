@@ -21,4 +21,16 @@ public class TeamResultViewModel {
         private String message;
         private Object data;
     }
+    @Data
+    public static class noramlWithTeamsModel {
+        private Integer code;
+        private String message;
+        private Object teams;
+    }
+    @Data
+    public static class noramlWithMembersModel{
+        private Integer code;
+        private String message;
+        private Object members;
+    }
 }

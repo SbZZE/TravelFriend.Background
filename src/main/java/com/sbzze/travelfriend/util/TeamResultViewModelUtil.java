@@ -26,11 +26,11 @@ public class TeamResultViewModelUtil {
         return CreateModel;
     }
 
-    public static TeamResultViewModel.normalWithDataModel getTeamInfoSuccess(Object object) {
-        TeamResultViewModel.normalWithDataModel getTeamInfoModel = new TeamResultViewModel.normalWithDataModel();
+    public static TeamResultViewModel.noramlWithTeamsModel getTeamInfoSuccess(Object object) {
+        TeamResultViewModel.noramlWithTeamsModel getTeamInfoModel = new TeamResultViewModel.noramlWithTeamsModel();
         getTeamInfoModel.setCode(200);
         getTeamInfoModel.setMessage("获取成功");
-        getTeamInfoModel.setData(object);
+        getTeamInfoModel.setTeams(object);
 
         return getTeamInfoModel;
     }
@@ -76,11 +76,11 @@ public class TeamResultViewModelUtil {
         return updateAvatarModel;
     }
 
-    public static TeamResultViewModel.normalWithDataModel getTeamMemberSuccess(Object object) {
-        TeamResultViewModel.normalWithDataModel getTeamMemberModel = new TeamResultViewModel.normalWithDataModel();
+    public static TeamResultViewModel.noramlWithMembersModel getTeamMemberSuccess(Object object) {
+        TeamResultViewModel.noramlWithMembersModel getTeamMemberModel = new TeamResultViewModel.noramlWithMembersModel();
         getTeamMemberModel.setCode(200);
         getTeamMemberModel.setMessage("获取成功");
-        getTeamMemberModel.setData(object);
+        getTeamMemberModel.setMembers(object);
 
         return getTeamMemberModel;
     }

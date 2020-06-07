@@ -37,8 +37,9 @@ public class Team {
     @TableField("introduction")
     private String introduction;
 
-    @TableField("member")
-    private char member[];
+//    @TableField("member")
+//    private char member[];
+
 
 
 }

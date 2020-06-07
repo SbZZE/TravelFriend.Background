@@ -26,9 +26,10 @@ import java.util.List;
 public class TeamServiceImpl extends BaseServiceImpl<TeamMapper, Team> implements TeamService {
     @Autowired
     UserService userService;
+
     //创建团队
     @Override
-    public int insertTeam(String username, String teamname, String introduction){
+    public int insertTeam(String username, String teamname, String introduction) {
         Team team = new Team();
         User user = userService.findUserByName(username);
         team.setId(UUIDUtil.getUUID());
@@ -37,39 +38,49 @@ public class TeamServiceImpl extends BaseServiceImpl<TeamMapper, Team> implement
         team.setIntroduction(introduction);
         return baseMapper.insert(team);
     }
+
     //查
     @Override
-    public List<Team> findTeamByUserId(String userId){
+    public List<Team> findTeamByUserId(String userId) {
         return baseMapper.findTeamByUserId(userId);
     }
+
     @Override
-    public Team findTeamByTeamId(String id){
+    public Team findTeamByTeamId(String id) {
         return baseMapper.findTeamById(id);
     }
+
     @Override
-    public byte[] getTeamAvatar(String teamid){
+    public byte[] getTeamAvatar(String teamid) {
         Team team = baseMapper.findTeamById(teamid);
-        if (null == team){
+        if (null == team) {
             return null;
         }
         String avatarUrl = team.getCompressAvatar();
         byte[] fileBytes = FileUtil.downloadFileBytes(avatarUrl);
         return fileBytes;
     }
+
     @Override
-    public List<Team> findTeamByUserNameInMembers(String userName){
+    public List<Team> findTeamByUserNameInMembers(String userName) {
         return baseMapper.findTeamByUserNameInMembers(userName);
     }
 
+//    //查找某团队所有的用户
+//    @Override
+//    public List<User> findUserByTeamId(String teamid){
+//        return baseMapper.findUserByTeamId(teamid);
+//    }
+
     //获取某用户所有的团队信息
     @Override
-    public List<Object> getTeamInfo(String userid){
+    public List<Object> getTeamInfo(String userid) {
         User user = userService.findUserById(userid);
         List<Team> teamsFromMember = findTeamByUserNameInMembers(user.getUsername());
         List<Team> teams = findTeamByUserId(userid);
         TeamDto.TeamInfoWithOutAvatarDto teamInfoWithOutAvatarDto = new TeamDto.TeamInfoWithOutAvatarDto();
         List<Object> teamInfoWithOutAvatarDtos = new ArrayList<>();
-        for (Team team : teams){
+        for (Team team : teams) {
             teamInfoWithOutAvatarDto.setTeamid(team.getId());
             teamInfoWithOutAvatarDto.setTeamname(team.getTeamName());
             teamInfoWithOutAvatarDto.setIntroduction(team.getIntroduction());
@@ -77,7 +88,7 @@ public class TeamServiceImpl extends BaseServiceImpl<TeamMapper, Team> implement
 
             teamInfoWithOutAvatarDtos.add(teamInfoWithOutAvatarDto);
         }
-        for (Team team : teamsFromMember){
+        for (Team team : teamsFromMember) {
             teamInfoWithOutAvatarDto.setTeamid(team.getId());
             teamInfoWithOutAvatarDto.setTeamname(team.getTeamName());
             teamInfoWithOutAvatarDto.setIntroduction(team.getIntroduction());
@@ -91,7 +102,7 @@ public class TeamServiceImpl extends BaseServiceImpl<TeamMapper, Team> implement
 
     //修改团队信息不包括头像
     @Override
-    public int updateTeamInfoWithOutAvatar(TeamDto.TeamInfoWithOutAvatarDto updateDto){
+    public int updateTeamInfoWithOutAvatar(TeamDto.TeamInfoWithOutAvatarDto updateDto) {
         Team team = baseMapper.findTeamById(updateDto.getTeamid());
         team.setTeamName(updateDto.getTeamname());
         team.setIntroduction(updateDto.getIntroduction());
@@ -99,19 +110,19 @@ public class TeamServiceImpl extends BaseServiceImpl<TeamMapper, Team> implement
     }
 
     //修改团队头像
-    public int updateTeamAvatar(String teamid, MultipartFile file){
+    public int updateTeamAvatar(String teamid, MultipartFile file) {
         String originalFileName = file.getOriginalFilename();
         String changedFileName = FileNameUtil.getFileName(originalFileName);
-        String filePath = FileNameUtil.getFilePath(ROOT_PATH, SON_PATH, TEAM + "/" + AVATAR , teamid);
-        if ( !FileUtil.uploadByDeleteExistFile(filePath, file, changedFileName) ) {
+        String filePath = FileNameUtil.getFilePath(ROOT_PATH, SON_PATH, TEAM + "/" + AVATAR, teamid);
+        if (!FileUtil.uploadByDeleteExistFile(filePath, file, changedFileName)) {
             return -1;
         }
 
         //压缩图片并上传
-        if ( !FileUtil.compressFile(file, filePath, changedFileName, PREFIX, 1f, 0.2f) ) {
+        if (!FileUtil.compressFile(file, filePath, changedFileName, PREFIX, 1f, 0.2f)) {
             return -1;
         }
-        String urlPath = FileNameUtil.getUrlPath(POST, SON_PATH, TEAM + "/" + AVATAR , teamid);
+        String urlPath = FileNameUtil.getUrlPath(POST, SON_PATH, TEAM + "/" + AVATAR, teamid);
         String insertFileName = urlPath + changedFileName;
         String insertCompressFileName = urlPath + PREFIX + changedFileName;
         Team team = baseMapper.findTeamById(teamid);
@@ -121,24 +132,41 @@ public class TeamServiceImpl extends BaseServiceImpl<TeamMapper, Team> implement
     }
 
     //获取某团队所有成员
-    public List<Team> getTeamMember(String teamid){
+//    public List<Team> getTeamMember(String teamid){
+//        Team team = baseMapper.findTeamById(teamid);
+//        Team teamLeader = userService.findUserById(team.getUserId());
+//        TeamDto.TeamMemberInfoDto teamMemberInfoDto = new TeamDto.TeamMemberInfoDto();
+//        char members[] = team.getMember();
+//        List<Team> teamMemberInfoDtos = new ArrayList<>();
+//        if (members == null){
+//            return teamLeader;
+//        }
+//        for (int i = members.length ; i>=0 ; i--){
+//            teamMemberInfoDto.setUsername(teamMemberInfoDto.getUsername());
+//            teamMemberInfoDto.setNickname(teamMemberInfoDto.getNickname());
+//            teamMemberInfoDto.setIsleader(false);
+//        }
+//        return teamMemberInfoDtos;
+//
+//
+//    }
+
+    public List<Object> getTeamMember(String teamid) {
         Team team = baseMapper.findTeamById(teamid);
+
+        User users = userService.findUserById(team.getUserId());
         TeamDto.TeamMemberInfoDto teamMemberInfoDto = new TeamDto.TeamMemberInfoDto();
-        char members[] = team.getMember();
-        List<Team> teamMemberInfoDtos = new ArrayList<>();
-        if (members == null){
-            return null;
-        }
-        for (int i = members.length ; i>=0 ; i--){
-            teamMemberInfoDto.setUsername(teamMemberInfoDto.getUsername());
-            teamMemberInfoDto.setNickname(teamMemberInfoDto.getNickname());
-            teamMemberInfoDto.setIsleader(false);
-        }
+
+        List<Object> teamMemberInfoDtos = new ArrayList<>();
+
+            teamMemberInfoDto.setUsername(users.getUsername());
+            teamMemberInfoDto.setNickname(users.getNickname());
+            teamMemberInfoDto.setIsleader(true);
+            teamMemberInfoDtos.add(teamMemberInfoDto);
+
         return teamMemberInfoDtos;
 
-
     }
-
-    }
+}
 
 
