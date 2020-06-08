@@ -93,30 +93,31 @@ public class TeamResultViewModelUtil {
         return getTeamMemberModel;
     }
 
-    public static TeamResultViewModel.normalWithDataModel getTeamAlbumInfoSuccess(Object object) {
-        TeamResultViewModel.normalWithDataModel getTeamAlbumInfoModel = new TeamResultViewModel.normalWithDataModel();
+    public static TeamResultViewModel.noramlWithAlbumsModel getTeamAlbumInfoSuccess(Object object) {
+        TeamResultViewModel.noramlWithAlbumsModel getTeamAlbumInfoModel = new TeamResultViewModel.noramlWithAlbumsModel();
         getTeamAlbumInfoModel.setCode(200);
         getTeamAlbumInfoModel.setMessage("成功");
-        getTeamAlbumInfoModel.setData(object);
+        getTeamAlbumInfoModel.setAlbums(object);
 
         return getTeamAlbumInfoModel;
 
     }
 
-    public static TeamResultViewModel.normalWithDataModel getTeamAlbumInfoError(Object object) {
-        TeamResultViewModel.normalWithDataModel getTeamAlbumInfoModel = new TeamResultViewModel.normalWithDataModel();
+    public static TeamResultViewModel.noramlWithAlbumsModel getTeamAlbumInfoError(Object object) {
+        TeamResultViewModel.noramlWithAlbumsModel getTeamAlbumInfoModel = new TeamResultViewModel.noramlWithAlbumsModel();
         getTeamAlbumInfoModel.setCode(201);
         getTeamAlbumInfoModel.setMessage("失败");
-        getTeamAlbumInfoModel.setData(object);
+        getTeamAlbumInfoModel.setAlbums(object);
 
         return getTeamAlbumInfoModel;
 
     }
 
-    public static TeamResultViewModel.normalModel addTeamAlbumSuccess(){
-        TeamResultViewModel.normalModel addTeamAlbumModel = new TeamResultViewModel.normalModel();
+    public static TeamResultViewModel.noramlWithTeamAlbumIdModel addTeamAlbumSuccess(String albumid){
+        TeamResultViewModel.noramlWithTeamAlbumIdModel addTeamAlbumModel = new TeamResultViewModel.noramlWithTeamAlbumIdModel();
         addTeamAlbumModel.setCode(200);
         addTeamAlbumModel.setMessage("新建相册成功");
+        addTeamAlbumModel.setAlbumid(albumid);
 
         return addTeamAlbumModel;
     }
@@ -125,6 +126,14 @@ public class TeamResultViewModelUtil {
         TeamResultViewModel.normalModel addTeamAlbumModel = new TeamResultViewModel.normalModel();
         addTeamAlbumModel.setCode(201);
         addTeamAlbumModel.setMessage("新建相册失败，相册已存在");
+
+        return addTeamAlbumModel;
+    }
+
+    public static TeamResultViewModel.normalModel addTeamAlbumError(){
+        TeamResultViewModel.normalModel addTeamAlbumModel = new TeamResultViewModel.normalModel();
+        addTeamAlbumModel.setCode(201);
+        addTeamAlbumModel.setMessage("新建相册失败");
 
         return addTeamAlbumModel;
     }

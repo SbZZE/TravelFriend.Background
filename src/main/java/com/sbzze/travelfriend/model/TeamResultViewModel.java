@@ -33,4 +33,22 @@ public class TeamResultViewModel {
         private String message;
         private Object members;
     }
+    @Data
+    public static class noramlWithAlbumsModel{
+        private Integer code;
+        private String message;
+        private Object albums;
+    }
+    @Data
+    public static class noramlWithTeamAlbumIdModel{
+        private Integer code;
+        private String message;
+        private String albumid;
+    }
+    @Data
+    public static class noramlWithTeamAlbumCoverModel{
+        private Integer code;
+        private String message;
+        private Object cover;
+    }
 }

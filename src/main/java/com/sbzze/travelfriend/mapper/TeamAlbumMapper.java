@@ -15,7 +15,8 @@ import java.util.List;
  */
 @Mapper
 public interface TeamAlbumMapper extends BaseMapper<TeamAlbum> {
-    TeamAlbum findTeamAlbumByTeamIdAndAlbumName(@Param("team_id") String teamid ,@Param("albumname") String albumname);
-    List<TeamAlbum> findAlbumByTeamId(@Param("teamId") String teamId);
+    TeamAlbum findTeamAlbumByTeamIdAndAlbumName(@Param("teamid") String teamid ,@Param("albumname") String albumname);
+    List<TeamAlbum> findTeamAlbumByTeamId(@Param("teamid") String teamid);
+    TeamAlbum findTeamAlbumByAlbumId(@Param("id") String albumid);
 
 }

@@ -22,14 +22,20 @@ public class TeamAlbum {
     private String id;
 
     @TableField("team_id")
-    private String teamId;
+    private String teamid;
 
     @TableField("cover")
     private String cover;
+
+    @TableField("compress_cover")
+    private String compressCover;
 
     @TableField("albumname")
     private String albumname;
 
     @TableField("introduction")
     private String introduction;
+
+    @TableField("count")
+    private String count;
 }

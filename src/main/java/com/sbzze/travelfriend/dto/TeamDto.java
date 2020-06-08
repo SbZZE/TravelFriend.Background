@@ -1,6 +1,7 @@
 package com.sbzze.travelfriend.dto;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @Author:Zzq
@@ -29,6 +30,20 @@ public class TeamDto {
         private String username;
         private String nickname;
         private boolean isleader;
+    }
+    @Data
+    public static class TeamAlbumDto {
+        private String teamname;
+        private String albumname;
+        private String introduction;
+        private MultipartFile cover;
+    }
+
+    @Data
+    public static class TeamAlbumInfoDto {
+        private String albumid;
+        private String albumname;
+        private String count;
     }
 
 }
