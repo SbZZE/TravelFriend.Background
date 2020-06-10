@@ -4,6 +4,7 @@ import com.sbzze.travelfriend.dto.TeamDto;
 import com.sbzze.travelfriend.entity.Team;
 import com.sbzze.travelfriend.entity.User;
 import com.sbzze.travelfriend.filter.UserLoginToken;
+import com.sbzze.travelfriend.service.TeamMemberService;
 import com.sbzze.travelfriend.service.TeamService;
 import com.sbzze.travelfriend.service.UserService;
 import com.sbzze.travelfriend.service.UserTokenService;
@@ -34,6 +35,9 @@ public class TeamController {
 
     @Autowired
     private TeamService teamService;
+
+    @Autowired
+    private TeamMemberService teamMemberService;
 
     @Autowired
     RabbitTemplate rabbitTemplate;
@@ -87,6 +91,7 @@ public class TeamController {
         if (flag <= 0){
             return TeamResultViewModelUtil.CreateErrorByExit();
         }else {
+
             return TeamResultViewModelUtil.CreateSuccess();
         }
 

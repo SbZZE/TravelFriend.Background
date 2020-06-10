@@ -2,8 +2,10 @@ package com.sbzze.travelfriend.serviceImpl;
 
 import com.sbzze.travelfriend.dto.TeamDto;
 import com.sbzze.travelfriend.entity.Team;
+import com.sbzze.travelfriend.entity.TeamMember;
 import com.sbzze.travelfriend.entity.User;
 import com.sbzze.travelfriend.mapper.TeamMapper;
+import com.sbzze.travelfriend.service.TeamMemberService;
 import com.sbzze.travelfriend.service.TeamService;
 import com.sbzze.travelfriend.service.UserService;
 import com.sbzze.travelfriend.util.FileNameUtil;
@@ -23,19 +25,25 @@ import java.util.List;
  * @Time:15:29
  */
 @Service
-public class TeamServiceImpl extends BaseServiceImpl<TeamMapper, Team> implements TeamService {
+public class TeamServiceImpl extends BaseServiceImpl<TeamMapper, Team>  implements TeamService {
     @Autowired
     UserService userService;
+
+    @Autowired
+    TeamMemberService teamMemberService;
+
 
     //创建团队
     @Override
     public int insertTeam(String username, String teamname, String introduction) {
         Team team = new Team();
+        //TeamMember teamMember = new TeamMember();
         User user = userService.findUserByName(username);
         team.setId(UUIDUtil.getUUID());
         team.setUserId(user.getId());
         team.setTeamName(teamname);
         team.setIntroduction(introduction);
+
         return baseMapper.insert(team);
     }
 
@@ -152,18 +160,30 @@ public class TeamServiceImpl extends BaseServiceImpl<TeamMapper, Team> implement
 //
 //    }
 
+    //获取某团队的所有成员
     public List<Object> getTeamMember(String teamid) {
+        int count = 1;
         Team team = baseMapper.findTeamById(teamid);
-
+        List<TeamMember> teamMembers = teamMemberService.findMemberByTeamId(teamid);
         User users = userService.findUserById(team.getUserId());
         TeamDto.TeamMemberInfoDto teamMemberInfoDto = new TeamDto.TeamMemberInfoDto();
 
         List<Object> teamMemberInfoDtos = new ArrayList<>();
 
-            teamMemberInfoDto.setUsername(users.getUsername());
-            teamMemberInfoDto.setNickname(users.getNickname());
-            teamMemberInfoDto.setIsleader(true);
-            teamMemberInfoDtos.add(teamMemberInfoDto);
+        teamMemberInfoDto.setUsername(users.getUsername());
+        teamMemberInfoDto.setNickname(users.getNickname());
+        teamMemberInfoDto.setIsleader(true);
+        teamMemberInfoDtos.add(teamMemberInfoDto);
+
+        for (TeamMember teamMember : teamMembers){
+            teamMemberInfoDto = new TeamDto.TeamMemberInfoDto();
+            teamMemberInfoDto.setUsername(teamMember.getMembername());
+            teamMemberInfoDto.setNickname(teamMember.getMembernickname());
+            teamMemberInfoDto.setIsleader(false);
+            teamMemberInfoDtos.add(count , teamMemberInfoDto);
+            count++;
+        }
+
 
         return teamMemberInfoDtos;
 

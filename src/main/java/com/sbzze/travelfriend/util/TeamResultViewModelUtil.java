@@ -137,4 +137,28 @@ public class TeamResultViewModelUtil {
 
         return addTeamAlbumModel;
     }
+
+    public static TeamResultViewModel.normalModel addTeamMemberError(){
+        TeamResultViewModel.normalModel addTeamMemberModel = new TeamResultViewModel.normalModel();
+        addTeamMemberModel.setCode(202);
+        addTeamMemberModel.setMessage("添加队友失败");
+
+        return addTeamMemberModel;
+    }
+
+    public static TeamResultViewModel.normalModel addTeamMemberErrorByExit(){
+        TeamResultViewModel.normalModel addTeamMemberModel = new TeamResultViewModel.normalModel();
+        addTeamMemberModel.setCode(201);
+        addTeamMemberModel.setMessage("添加队友失败,该队友已经存在");
+
+        return addTeamMemberModel;
+    }
+
+    public static TeamResultViewModel.normalModel addTeamMemberSuccess(){
+        TeamResultViewModel.normalModel addTeamMemberModel = new TeamResultViewModel.normalModel();
+        addTeamMemberModel.setCode(200);
+        addTeamMemberModel.setMessage("添加队友成功");
+
+        return addTeamMemberModel;
+    }
 }
