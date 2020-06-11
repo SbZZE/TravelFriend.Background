@@ -1,6 +1,7 @@
 package com.sbzze.travelfriend.controller;
 
 import com.sbzze.travelfriend.entity.TeamMember;
+import com.sbzze.travelfriend.entity.User;
 import com.sbzze.travelfriend.filter.UserLoginToken;
 import com.sbzze.travelfriend.service.TeamMemberService;
 import com.sbzze.travelfriend.service.UserService;
@@ -40,6 +41,10 @@ public class TeamMemberController {
         TeamMember teamMemberForBase = teamMemberService.finMemberByMemberNameAndTeamId(username , teamid);
         if (null != teamMemberForBase ){
             return TeamResultViewModelUtil.addTeamMemberErrorByExit();
+        }
+        User userForBase = userService.findUserByName(username);
+        if (null == userForBase){
+            return TeamResultViewModelUtil.addTeamMemberErrorByNotExit();
         }
         int flag = teamMemberService.addTeamMember(teamid , username);
         if (flag <= 0){

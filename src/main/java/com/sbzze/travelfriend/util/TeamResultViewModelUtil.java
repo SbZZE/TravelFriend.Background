@@ -138,10 +138,10 @@ public class TeamResultViewModelUtil {
         return addTeamAlbumModel;
     }
 
-    public static TeamResultViewModel.normalModel addTeamMemberError(){
+    public static TeamResultViewModel.normalModel addTeamMemberErrorByNotExit(){
         TeamResultViewModel.normalModel addTeamMemberModel = new TeamResultViewModel.normalModel();
         addTeamMemberModel.setCode(202);
-        addTeamMemberModel.setMessage("添加队友失败");
+        addTeamMemberModel.setMessage("添加用户不存在");
 
         return addTeamMemberModel;
     }
@@ -149,7 +149,7 @@ public class TeamResultViewModelUtil {
     public static TeamResultViewModel.normalModel addTeamMemberErrorByExit(){
         TeamResultViewModel.normalModel addTeamMemberModel = new TeamResultViewModel.normalModel();
         addTeamMemberModel.setCode(201);
-        addTeamMemberModel.setMessage("添加队友失败,该队友已经存在");
+        addTeamMemberModel.setMessage("用户已存在团队");
 
         return addTeamMemberModel;
     }
@@ -157,7 +157,15 @@ public class TeamResultViewModelUtil {
     public static TeamResultViewModel.normalModel addTeamMemberSuccess(){
         TeamResultViewModel.normalModel addTeamMemberModel = new TeamResultViewModel.normalModel();
         addTeamMemberModel.setCode(200);
-        addTeamMemberModel.setMessage("添加队友成功");
+        addTeamMemberModel.setMessage("邀请成功");
+
+        return addTeamMemberModel;
+    }
+
+    public static TeamResultViewModel.normalModel addTeamMemberError(){
+        TeamResultViewModel.normalModel addTeamMemberModel = new TeamResultViewModel.normalModel();
+        addTeamMemberModel.setCode(203);
+        addTeamMemberModel.setMessage("其他错误");
 
         return addTeamMemberModel;
     }

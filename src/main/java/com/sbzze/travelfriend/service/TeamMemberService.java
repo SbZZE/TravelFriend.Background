@@ -22,6 +22,6 @@ public interface TeamMemberService extends IService<TeamMember> {
 
     int deleteUser(String teamid , String username);
 
-    //int addTeamLeader(String teamid , String username);
+    int addTeamLeader(String teamid , String username);
 
 }

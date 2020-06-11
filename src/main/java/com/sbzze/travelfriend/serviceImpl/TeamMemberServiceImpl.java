@@ -54,17 +54,17 @@ public class TeamMemberServiceImpl extends BaseServiceImpl<TeamMemberMapper, Tea
         return baseMapper.insert(teamMember);
     }
     //默认创建团队的用户为队长
-//    public int addTeamLeader(String teamid , String username){
-//        User user = userService.findUserByName(username);
-//        TeamMember teamMember = new TeamMember();
-//        teamMember.setId(UUIDUtil.getUUID());
-//        teamMember.setTeamid(teamid);
-//        teamMember.setMembername(username);
-//        teamMember.setMembernickname(user.getNickname());
-//        teamMember.setIsleader(true);
-//
-//        return baseMapper.insert(teamMember);
-//    }
+    public int addTeamLeader(String teamid , String username){
+        User user = userService.findUserByName(username);
+        TeamMember teamMember = new TeamMember();
+        teamMember.setId(UUIDUtil.getUUID());
+        teamMember.setTeamid(teamid);
+        teamMember.setMembername(username);
+        teamMember.setMembernickname(user.getNickname());
+        teamMember.setIsleader(true);
+
+        return baseMapper.insert(teamMember);
+    }
 
     //删除团队成员
     public int deleteUser(String teamid , String username){

@@ -37,12 +37,13 @@ public class TeamServiceImpl extends BaseServiceImpl<TeamMapper, Team>  implemen
     @Override
     public int insertTeam(String username, String teamname, String introduction) {
         Team team = new Team();
-        //TeamMember teamMember = new TeamMember();
         User user = userService.findUserByName(username);
         team.setId(UUIDUtil.getUUID());
         team.setUserId(user.getId());
         team.setTeamName(teamname);
         team.setIntroduction(introduction);
+
+        teamMemberService.addTeamLeader(team.getId() , username);
 
         return baseMapper.insert(team);
     }
@@ -81,11 +82,6 @@ public class TeamServiceImpl extends BaseServiceImpl<TeamMapper, Team>  implemen
     }
 
 
-//    //查找某团队所有的用户
-//    @Override
-//    public List<User> findUserByTeamId(String teamid){
-//        return baseMapper.findUserByTeamId(teamid);
-//    }
 
     //获取某用户所有的团队信息
     @Override
@@ -140,51 +136,20 @@ public class TeamServiceImpl extends BaseServiceImpl<TeamMapper, Team>  implemen
         return baseMapper.updateById(team);
     }
 
-    //获取某团队所有成员
-//    public List<Team> getTeamMember(String teamid){
-//        Team team = baseMapper.findTeamById(teamid);
-//        Team teamLeader = userService.findUserById(team.getUserId());
-//        TeamDto.TeamMemberInfoDto teamMemberInfoDto = new TeamDto.TeamMemberInfoDto();
-//        char members[] = team.getMember();
-//        List<Team> teamMemberInfoDtos = new ArrayList<>();
-//        if (members == null){
-//            return teamLeader;
-//        }
-//        for (int i = members.length ; i>=0 ; i--){
-//            teamMemberInfoDto.setUsername(teamMemberInfoDto.getUsername());
-//            teamMemberInfoDto.setNickname(teamMemberInfoDto.getNickname());
-//            teamMemberInfoDto.setIsleader(false);
-//        }
-//        return teamMemberInfoDtos;
-//
-//
-//    }
 
     //获取某团队的所有成员
     public List<Object> getTeamMember(String teamid) {
-        int count = 1;
-        Team team = baseMapper.findTeamById(teamid);
         List<TeamMember> teamMembers = teamMemberService.findMemberByTeamId(teamid);
-        User users = userService.findUserById(team.getUserId());
         TeamDto.TeamMemberInfoDto teamMemberInfoDto = new TeamDto.TeamMemberInfoDto();
-
         List<Object> teamMemberInfoDtos = new ArrayList<>();
-
-        teamMemberInfoDto.setUsername(users.getUsername());
-        teamMemberInfoDto.setNickname(users.getNickname());
-        teamMemberInfoDto.setIsleader(true);
-        teamMemberInfoDtos.add(teamMemberInfoDto);
-
         for (TeamMember teamMember : teamMembers){
             teamMemberInfoDto = new TeamDto.TeamMemberInfoDto();
             teamMemberInfoDto.setUsername(teamMember.getMembername());
             teamMemberInfoDto.setNickname(teamMember.getMembernickname());
-            teamMemberInfoDto.setIsleader(false);
-            teamMemberInfoDtos.add(count , teamMemberInfoDto);
-            count++;
+            teamMemberInfoDto.setIsleader(teamMember.isIsleader());
+
+            teamMemberInfoDtos.add(teamMemberInfoDto);
         }
-
-
         return teamMemberInfoDtos;
 
     }
