@@ -86,7 +86,7 @@ public class TeamServiceImpl extends BaseServiceImpl<TeamMapper, Team>  implemen
     //获取某用户所有的团队信息
     @Override
     public List<Object> getTeamInfo(String userid) {
-        int i = 0;
+
         List<Team> teams = findTeamByUserId(userid);
         TeamDto.TeamInfoWithOutAvatarDto teamInfoWithOutAvatarDto = new TeamDto.TeamInfoWithOutAvatarDto();
         List<Object> teamInfoWithOutAvatarDtos = new ArrayList<>();
@@ -97,9 +97,23 @@ public class TeamServiceImpl extends BaseServiceImpl<TeamMapper, Team>  implemen
             teamInfoWithOutAvatarDto.setIntroduction(team.getIntroduction());
             teamInfoWithOutAvatarDto.setIsleader(true);
 
-            teamInfoWithOutAvatarDtos.add(i , teamInfoWithOutAvatarDto);
-            i++;
+            teamInfoWithOutAvatarDtos.add(teamInfoWithOutAvatarDto);
 
+        }
+
+
+        User user = userService.findUserById(userid);
+        List<TeamMember> members = teamMemberService.findMemberByMemberNameNotLeader(user.getUsername());
+
+        TeamDto.TeamInfoWithOutAvatarDto teamInfoWithOutAvatarDto_noleader = new TeamDto.TeamInfoWithOutAvatarDto();
+        for (TeamMember teamMember : members){
+            Team team = findTeamByTeamId(teamMember.getTeamid());
+            teamInfoWithOutAvatarDto_noleader = new TeamDto.TeamInfoWithOutAvatarDto();
+            teamInfoWithOutAvatarDto_noleader.setTeamid(teamMember.getTeamid());
+            teamInfoWithOutAvatarDto_noleader.setTeamname(team.getTeamName());
+            teamInfoWithOutAvatarDto_noleader.setIntroduction(team.getIntroduction());
+            teamInfoWithOutAvatarDto_noleader.setIsleader(false);
+            teamInfoWithOutAvatarDtos.add(teamInfoWithOutAvatarDto_noleader);
         }
         return teamInfoWithOutAvatarDtos;
 

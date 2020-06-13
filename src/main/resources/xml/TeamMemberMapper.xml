@@ -25,9 +25,14 @@
       where
       member_name=#{membername}
     </select>
-    <select id="finMemberByMemberNameAndTeamId" resultType="com.sbzze.travelfriend.entity.TeamMember">
+    <select id="findMemberByMemberNameAndTeamId" resultType="com.sbzze.travelfriend.entity.TeamMember">
         SELECT * FROM team_member
         WHERE
         member_name=#{membername} AND team_id=#{teamid}
+    </select>
+    <select id="findMemberByMemberNameNotLeader" resultType="com.sbzze.travelfriend.entity.TeamMember">
+        SELECT * FROM team_member
+      where
+      member_name=#{membername} AND isleader=0
     </select>
 </mapper>

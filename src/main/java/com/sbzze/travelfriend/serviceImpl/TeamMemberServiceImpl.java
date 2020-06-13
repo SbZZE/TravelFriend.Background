@@ -32,13 +32,16 @@ public class TeamMemberServiceImpl extends BaseServiceImpl<TeamMemberMapper, Tea
     }
 
     @Override
-    public List<TeamMember> findMemberByMembername(String membername){
-        return baseMapper.findMemberByMembername(membername);
+    public List<TeamMember> findMemberByMemberName(String membername){
+        return baseMapper.findMemberByMemberName(membername);
     }
 
     @Override
-    public TeamMember finMemberByMemberNameAndTeamId(String membername , String teamid){
-        return baseMapper.finMemberByMemberNameAndTeamId(membername , teamid);
+    public TeamMember findMemberByMemberNameAndTeamId(String membername , String teamid){
+        return baseMapper.findMemberByMemberNameAndTeamId(membername , teamid);
+    }
+    public List<TeamMember> findMemberByMemberNameNotLeader(String membername){
+        return baseMapper.findMemberByMemberNameNotLeader(membername);
     }
 
     //新增团队成员
@@ -68,7 +71,7 @@ public class TeamMemberServiceImpl extends BaseServiceImpl<TeamMemberMapper, Tea
 
     //删除团队成员
     public int deleteUser(String teamid , String username){
-        TeamMember teamMember = baseMapper.finMemberByMemberNameAndTeamId(username , teamid);
+        TeamMember teamMember = baseMapper.findMemberByMemberNameAndTeamId(username , teamid);
 
         return baseMapper.deleteById(teamMember.getId());
     }

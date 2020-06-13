@@ -14,6 +14,7 @@ import java.util.List;
  */
 public interface TeamMemberMapper extends BaseMapper<TeamMember> {
     List<TeamMember> findMemberByTeamId(@Param("teamid") String teamid);
-    List<TeamMember> findMemberByMembername(@Param("membername") String membername);
-    TeamMember finMemberByMemberNameAndTeamId(@Param("membername") String membername , @Param("teamid") String teamid);
+    List<TeamMember> findMemberByMemberName(@Param("membername") String membername);
+    TeamMember findMemberByMemberNameAndTeamId(@Param("membername") String membername , @Param("teamid") String teamid);
+    List<TeamMember> findMemberByMemberNameNotLeader(@Param("membername") String membername);
 }

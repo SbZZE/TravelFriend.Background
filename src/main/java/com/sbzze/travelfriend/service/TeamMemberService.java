@@ -14,9 +14,11 @@ import java.util.List;
 public interface TeamMemberService extends IService<TeamMember> {
     List<TeamMember> findMemberByTeamId(String teamid);
 
-    List<TeamMember> findMemberByMembername(String membername);
+    List<TeamMember> findMemberByMemberName(String membername);
 
-    TeamMember finMemberByMemberNameAndTeamId(String membername , String teamid);
+    List<TeamMember> findMemberByMemberNameNotLeader(String membername);
+
+    TeamMember findMemberByMemberNameAndTeamId(String membername , String teamid);
 
     int addTeamMember(String teamid , String username);
 

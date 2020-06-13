@@ -38,7 +38,7 @@ public class TeamMemberController {
     @UserLoginToken
     @PostMapping
     public Object addTeamMember(String teamid , String username){
-        TeamMember teamMemberForBase = teamMemberService.finMemberByMemberNameAndTeamId(username , teamid);
+        TeamMember teamMemberForBase = teamMemberService.findMemberByMemberNameAndTeamId(username , teamid);
         if (null != teamMemberForBase ){
             return TeamResultViewModelUtil.addTeamMemberErrorByExit();
         }
@@ -58,7 +58,7 @@ public class TeamMemberController {
     @UserLoginToken
     @DeleteMapping
     public Object deleteUser(String teamid , String username){
-        TeamMember teamMemberForBase = teamMemberService.finMemberByMemberNameAndTeamId(username , teamid);
+        TeamMember teamMemberForBase = teamMemberService.findMemberByMemberNameAndTeamId(username , teamid);
         if (null == teamMemberForBase){
             return CancelModelUtil.cancelMemberErrorByNotExist();
         }
