@@ -75,7 +75,7 @@ public class TeamController {
     //创建团队
     @UserLoginToken
     @PostMapping("/create")
-    public Object creteTeam(@RequestBody TeamDto.TeamCreateDto teamCreateDto){
+    public Object createTeam(@RequestBody TeamDto.TeamCreateDto teamCreateDto){
         User userForBase = userService.findUserByName(teamCreateDto.getUsername());
         List<Team> teamForBase = teamService.findTeamByUserId(userForBase.getId());
         teams = new String[teamForBase.size()];
