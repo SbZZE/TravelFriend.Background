@@ -48,7 +48,7 @@ public class TeamAlbumServiceImpl extends BaseServiceImpl<TeamAlbumMapper , Team
         String originalFileName = cover.getOriginalFilename();
         String changedFileName = FileNameUtil.getFileName(originalFileName);
         String signName = TEAM + "/" + ALBUM;
-        String filePath = FileNameUtil.getFilePath(ROOT_PATH , SON_PATH , signName + "/" + COVER , teamid);
+        String filePath = FileNameUtil.getFilePath(ROOT_PATH , SON_PATH , signName  , teamid);
         if (!FileUtil.uploadByDeleteExistFile(filePath , cover , changedFileName)){
             return -1;
         }
@@ -63,9 +63,9 @@ public class TeamAlbumServiceImpl extends BaseServiceImpl<TeamAlbumMapper , Team
         album.setIntroduction(introduction);
         album.setCount("1");
 
-        String urlPath = FileNameUtil.getUrlPath(POST , SON_PATH , signName + "/" + COVER , teamid);
+        String urlPath = FileNameUtil.getUrlPath(POST , SON_PATH , signName , teamid + "/" + album.getId());
         String insertCompressFileName = urlPath + PREFIX + changedFileName;
-        String insertFileName = urlPath + PREFIX + changedFileName;
+        String insertFileName = urlPath + changedFileName;
         album.setCompressCover(insertCompressFileName);
         album.setCover(insertFileName);
 
