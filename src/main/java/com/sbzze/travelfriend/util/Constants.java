@@ -10,7 +10,10 @@ public interface Constants {
     String VIDEO = "video";
 
     // FFmpeg
-    String FFMPEG_PATH = "";
+    //Linux
+    String FFMPEG_PATH = "ffmpeg";
+    //windows
+    //String FFMPEG_PATH = "";
 
 
 
