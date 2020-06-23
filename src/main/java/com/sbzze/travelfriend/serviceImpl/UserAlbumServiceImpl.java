@@ -51,6 +51,9 @@ public class UserAlbumServiceImpl extends BaseServiceImpl<UserAlbumMapper, UserA
         String originalFileName = cover.getOriginalFilename();
         String changedFileName = FileNameUtil.getFileName(originalFileName);
         String signName = USER + "/" + ALBUM;
+        // TODO 修改保存地址
+        // 封面
+        // /ROOT_PATH/SON_PATH/user/album/${username}/${albumname}/avatar/
         String filePath = FileNameUtil.getFilePath(ROOT_PATH, SON_PATH, signName + "/" + COVER, username);
 
         if ( !FileUtil.compressFile(cover, filePath, changedFileName, PREFIX, 0.5f, 0.5f) ) {

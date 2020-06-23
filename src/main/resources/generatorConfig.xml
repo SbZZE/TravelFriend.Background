@@ -6,11 +6,11 @@
     <!-- 生成表对应的mapper、entity等文件 -->
     <properties resource="db.properties"></properties>
     
-    <classPathEntry location="D://mysql-connector-java//8.0.17//mysql-connector-java-8.0.17.jar"></classPathEntry>
+    <classPathEntry location="E://mysql-connector-java//8.0.17//mysql-connector-java-8.0.17.jar"></classPathEntry>
     <context id="default" targetRuntime="MyBatis3">
         <!--是否生成注释-->
         <commentGenerator>
-            <property name="suppressDate" value="false"/>
+            <property name="suppressAllComments" value="true"/>
         </commentGenerator>
 
         <jdbcConnection userId="${mysql.username}" password="${mysql.password}"
@@ -43,7 +43,10 @@
         </javaClientGenerator>
 
         <!--  指定表生成，全部为%  -->
-        <table tableName="album_images" schema="TravelFriend" ></table>
+        <table tableName="team_album_images" schema="TravelFriend"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false"></table>
     </context>
 
 </generatorConfiguration>

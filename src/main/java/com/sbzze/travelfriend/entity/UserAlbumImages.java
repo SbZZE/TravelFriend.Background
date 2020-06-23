@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("album_images")
-public class AlbumImages {
+@TableName("user_album_images")
+public class UserAlbumImages {
 
     @TableId
     private String id;
@@ -19,14 +19,13 @@ public class AlbumImages {
     @TableField("album_id")
     private String albumId;
 
-    @TableField("image")
-    private String image;
+    @TableField("image_type")
+    private String imageType;
 
-    @TableField("compress_image")
-    private String compressImage;
+    @TableField("address")
+    private String address;
 
-    @TableField("video")
-    private String video;
-
+    @TableField("compress_address")
+    private String compressAddress;
 
 }

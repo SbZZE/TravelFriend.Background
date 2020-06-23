@@ -1,9 +1,9 @@
 package com.sbzze.travelfriend.serviceImpl;
 
-import com.sbzze.travelfriend.entity.AlbumImages;
+import com.sbzze.travelfriend.entity.UserAlbumImages;
 import com.sbzze.travelfriend.entity.UserAlbum;
-import com.sbzze.travelfriend.mapper.AlbumImagesMapper;
-import com.sbzze.travelfriend.service.AlbumImagesService;
+import com.sbzze.travelfriend.mapper.UserAlbumImagesMapper;
+import com.sbzze.travelfriend.service.UserAlbumImagesService;
 import com.sbzze.travelfriend.service.UserAlbumService;
 import com.sbzze.travelfriend.service.UserService;
 import com.sbzze.travelfriend.util.FileNameUtil;
@@ -12,8 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Service
-public class AlbumImagesServiceImpl extends BaseServiceImpl<AlbumImagesMapper, AlbumImages> implements AlbumImagesService {
+public class UserAlbumImagesServiceImpl extends BaseServiceImpl<UserAlbumImagesMapper, UserAlbumImages> implements UserAlbumImagesService {
+
+    //TODO 待修改
 
     @Autowired
     UserService userService;
@@ -22,7 +26,7 @@ public class AlbumImagesServiceImpl extends BaseServiceImpl<AlbumImagesMapper, A
     UserAlbumService userAlbumService;
 
     @Override
-    public AlbumImages findImagesByAlbumId(String albumId) {
+    public List<UserAlbumImages> findImagesByAlbumId(String albumId) {
         return baseMapper.findImagesByAlbumId(albumId);
     }
 
@@ -30,6 +34,8 @@ public class AlbumImagesServiceImpl extends BaseServiceImpl<AlbumImagesMapper, A
     @Override
     public int updateUserAlbum(String username, MultipartFile[] files, String albumname ) {
         String signName = USER + "/" + ALBUM;
+        // TODO 修改保存地址
+        // /ROOT_PATH/SON_PATH/user/album/${username}/${albumname}/分照片和视频的文件夹？
         String filePath = FileNameUtil.getFilePath(ROOT_PATH, SON_PATH, signName, username);
         String originalFilePath = filePath + "orginal" + "/";
         String compressFilePath = filePath + "compress" + "/";
@@ -48,15 +54,19 @@ public class AlbumImagesServiceImpl extends BaseServiceImpl<AlbumImagesMapper, A
         UserAlbum album  = userAlbumService.findAlbumByUserIdAndAlbumName(userId, albumname);
 
         if ( album != null ) {
-            AlbumImages albumImages = findImagesByAlbumId(album.getId());
-            albumImages.setImage(insertFilePath);
-            albumImages.setCompressImage(insertCompressFilePath);
+            /*
+            UserAlbumImages userAlbumImages = findImagesByAlbumId(album.getId());
+            userAlbumImages.setImage(insertFilePath);
+            userAlbumImages.setCompressImage(insertCompressFilePath);
 
-            return baseMapper.updateById(albumImages);
+            return baseMapper.updateById(userAlbumImages);
+            */
         } else {
             //TODO 返回码待修改
             return -1;
         }
+        //TODO
+        return 1;
 
     }
 }
