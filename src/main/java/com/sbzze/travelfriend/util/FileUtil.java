@@ -1,7 +1,12 @@
 package com.sbzze.travelfriend.util;
 
 
+import com.sbzze.travelfriend.dto.FileChunkDto;
+import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
+import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import org.apache.commons.io.FileUtils;
@@ -11,20 +16,31 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.List;
 
 
 /**
- * 文件上传工具类
+ * 文件工具类
  *
  **/
+@Slf4j
 public class FileUtil {
 
+
+    @Autowired
+    private static RedisTemplate<String, Object> redisTemplate;
+
     /**
-     * 上传文件
+     * 上传文件(流式上传)
      * @param file 源文件
      * @param dest 目标文件
      * @return
@@ -200,7 +216,6 @@ public class FileUtil {
         }
     }
 
-
     /**
      * 上传相册
      * @param filePath
@@ -217,5 +232,209 @@ public class FileUtil {
         }
 
         return upload(file, dest);
+    }
+
+
+    /**
+     * 分片上传
+     * @param filePath
+     * @param fileChunkDto
+     * @return
+     */
+    public static File sliceUpload( String filePath, FileChunkDto fileChunkDto ) {
+        return uploadByMappedByteBuffer(filePath, fileChunkDto);
+    }
+
+
+    // mapped上传方式
+    public static File uploadByMappedByteBuffer( String filePath, FileChunkDto fileChunkDto ) {
+        boolean isFinish = false;
+        File file = null;
+        String tempFileName = filePath + "temp_" + fileChunkDto.getFilename();
+        File tempFile = new File(tempFileName);
+
+        if (!tempFile.getParentFile().exists()) {
+            tempFile.getParentFile().mkdirs();
+        }
+
+        try {
+            RandomAccessFile tempRaf = new RandomAccessFile(tempFile, "rw");
+            FileChannel fileChannel = tempRaf.getChannel();
+
+            //偏移量
+            long offset = fileChunkDto.getChunksize() * fileChunkDto.getChunknumber();
+            //每片字节大小
+            byte[] fileData = fileChunkDto.getFilechunk().getBytes();
+            MappedByteBuffer mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_WRITE, offset, fileData.length);
+            mappedByteBuffer.put(fileData);
+
+            //释放
+            freedMappedByteBuffer(mappedByteBuffer);
+            fileChannel.close();
+            tempRaf.close();
+
+            isFinish = checkAndSetUploadProgress(fileChunkDto, filePath);
+
+            if (isFinish) {
+                 file = FileNameUtil.renameFile(tempFile, fileChunkDto.getFilename());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return file;
+    }
+
+    // 检查并修改文件上传进度
+    private static boolean checkAndSetUploadProgress( FileChunkDto fileChunkDto, String filePath ) {
+        boolean isFinish = false;
+        String fileName = FileNameUtil.getNameWithOutSuffix(fileChunkDto.getFilename());
+        String confFileName = filePath + fileName + ".conf";
+        File confFile = new File(confFileName);
+
+        try {
+            RandomAccessFile accessFile = new RandomAccessFile(confFile, "rw");
+            System.out.println("N0." + fileChunkDto.getChunknumber() + " completed");
+
+            //创建conf文件文件长度为总分片数，每上传一个分块即向conf文件中写入一个127，那么没上传的位置就是默认0,已上传的就是Byte.MAX_VALUE 127
+            accessFile.setLength(fileChunkDto.getTotalchunks());
+            accessFile.seek(fileChunkDto.getChunknumber());
+            accessFile.write(Byte.MAX_VALUE);
+
+
+            byte[] completeList = FileUtils.readFileToByteArray(confFile);
+            byte isComplete = Byte.MAX_VALUE;
+            for (int i = 0; i < completeList.length && isComplete == Byte.MAX_VALUE; i++) {
+                //与运算, 如果有部分没有完成则 isComplete 不是 Byte.MAX_VALUE
+                isComplete = (byte) (isComplete & completeList[i]);
+                System.out.println("check part " + i + " complete?:" + completeList[i]);
+            }
+
+            accessFile.close();
+
+            isFinish = setUploadProgress2Redis(fileChunkDto, filePath, confFile, isComplete);
+
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        }
+
+        return isFinish;
+    }
+
+    // 把上传进度信息存进redis
+    private static boolean setUploadProgress2Redis( FileChunkDto fileChunkDto, String filePath, File confFile, byte isComplete ) {
+        String filename = fileChunkDto.getFilename();
+        String confFileName = FileNameUtil.getNameWithOutSuffix(filename);
+        // 上传完成
+        if (isComplete == Byte.MAX_VALUE) {
+            redisTemplate.opsForHash().put(Constants.FILE_UPLOAD_STATUS, fileChunkDto.getIdentifier(), "true");
+            redisTemplate.opsForValue().set(Constants.FILE_MD5_KEY + fileChunkDto.getIdentifier(), filePath + filename);
+            //删除缓存
+            redisTemplate.delete(Constants.FILE_MD5_KEY + fileChunkDto.getIdentifier());
+            confFile.delete();
+            return true;
+        } else {
+            // 上传失败，更新Redis信息
+            if (!redisTemplate.opsForHash().hasKey(Constants.FILE_UPLOAD_STATUS, fileChunkDto.getIdentifier())) {
+                redisTemplate.opsForHash().put(Constants.FILE_UPLOAD_STATUS, fileChunkDto.getIdentifier(), "false");
+                redisTemplate.opsForValue().set(Constants.FILE_MD5_KEY + fileChunkDto.getIdentifier(),
+                        filePath + confFileName + ".conf");
+
+            }
+
+            return false;
+        }
+    }
+
+    // 释放mapped线程
+    public static void freedMappedByteBuffer(final MappedByteBuffer mappedByteBuffer) {
+        try {
+            if (mappedByteBuffer == null) {
+                return;
+            }
+
+            mappedByteBuffer.force();
+            AccessController.doPrivileged(new PrivilegedAction<Object>() {
+                @Override
+                public Object run() {
+                    try {
+                        Method getCleanerMethod = mappedByteBuffer.getClass().getMethod("cleaner", new Class[0]);
+                        getCleanerMethod.setAccessible(true);
+                        sun.misc.Cleaner cleaner = (sun.misc.Cleaner) getCleanerMethod.invoke(mappedByteBuffer,
+                                new Object[0]);
+                        cleaner.clean();
+                    } catch (Exception e) {
+                        log.error("clean MappedByteBuffer error!!!", e);
+                    }
+                    log.info("clean MappedByteBuffer completed!!!");
+                    return null;
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * MultipartFile转File
+     * @param file
+     * @return
+     */
+    public static MultipartFile transferMultipartFileToFile( File file ) {
+        MultipartFile multipartFile = null;
+        try {
+            FileInputStream input = new FileInputStream(file);
+            multipartFile =new MockMultipartFile("file", file.getName(), "text/plain", IOUtils.toByteArray(input));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return multipartFile;
+    }
+
+    /**
+     * 生成视频缩略图
+     * @param videoName
+     * @param ffmpegPath
+     * @param length
+     * @param width
+     * @return compressName / null
+     */
+    public static boolean compressVideoToImage( String videoName, String ffmpegPath, String length, String width, String prefix ) {
+        File file = new File(videoName);
+        // 原地址 + 前缀 + 文件名.jpg
+        String compressName = file.getParent() + "/" + prefix + file.getName().substring(0, file.getName().indexOf(".")) + ".jpg";
+        if (!file.exists()) {
+            System.err.println("file " + videoName + " is not exist!");
+            return false;
+        }
+        List<String> commands = new java.util.ArrayList<String>();
+        String scale = length + "*" + width;
+
+        commands.add(ffmpegPath);
+        commands.add("-i");
+        commands.add(videoName);
+        commands.add("-y");
+        commands.add("-f");
+        commands.add("image2");
+        commands.add("-ss");
+        commands.add("1");//这个参数是设置截取视频多少秒时的画面
+        //commands.add("-t");
+        //commands.add("0.001");
+        commands.add("-s");
+        commands.add(scale);
+        commands.add(compressName);
+
+        try {
+            ProcessBuilder builder = new ProcessBuilder();
+            builder.command(commands);
+            builder.start();
+            System.out.println("截取成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 }

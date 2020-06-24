@@ -1,13 +1,17 @@
 package com.sbzze.travelfriend.util;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
  * @description: 生成文件名工具类
- * @author: yuxiang
- * @create: 2019-12-02 15:53
+ * @author: TJ
  **/
+@Slf4j
 public class FileNameUtil {
 
     /**
@@ -20,7 +24,16 @@ public class FileNameUtil {
     }
 
     /**
-     * 生成新的文件名
+     * 获取文件名
+     * @param fileName
+     * @return
+     */
+    public static String getNameWithOutSuffix(String fileName) {
+        return fileName.substring(fileName.indexOf("."));
+    }
+
+    /**
+     * 生成新的文件名(使用UUID)
      * @param fileOriginName 源文件名
      * @return
      */
@@ -33,11 +46,11 @@ public class FileNameUtil {
      * @param rootPath
      * @param sonPath
      * @param signName
-     * @param username
+     * @param tagName
      * @return
      */
-    public static String getFilePath(String rootPath, String sonPath, String signName, String username) {
-        return rootPath + sonPath + "/" + signName + "/" + username + "/";
+    public static String getFilePath(String rootPath, String sonPath, String signName, String tagName) {
+        return rootPath + sonPath + "/" + signName + "/" + tagName + "/";
     }
 
     /**
@@ -45,10 +58,10 @@ public class FileNameUtil {
      * @param post
      * @param sonPath
      * @param signName
-     * @param username
+     * @param tagName
      * @return
      */
-    public static String getUrlPath(String post, String sonPath, String signName, String username) {
+    public static String getUrlPath(String post, String sonPath, String signName, String tagName) {
         String host = null;
         try {
             host = InetAddress.getLocalHost().getHostAddress();
@@ -56,7 +69,33 @@ public class FileNameUtil {
             e.printStackTrace();
         }
 
-        String url = "http://" + host + ":" + post + sonPath + "/" + signName + "/" + username + "/";
+        String url = "http://" + host + ":" + post + sonPath + "/" + signName + "/" + tagName + "/";
         return url;
+    }
+
+    /**
+     * 文件重命名
+     *
+     * @param toBeRenamed   将要修改名字的文件
+     * @param toFileNewName 新的名字
+     * @return
+     */
+    public static File renameFile(File toBeRenamed, String toFileNewName) {
+
+        //检查要重命名的文件是否存在，是否是文件
+        if (!toBeRenamed.exists() || toBeRenamed.isDirectory()) {
+            log.info("File does not exist: " + toBeRenamed.getName());
+            return null;
+        }
+
+        String filePath = toBeRenamed.getParent();
+        File newFile = new File(filePath + File.separatorChar + toFileNewName);
+        //修改文件名
+        if (toBeRenamed.renameTo(newFile)) {
+            return newFile;
+        } else {
+            return null;
+        }
+
     }
 }

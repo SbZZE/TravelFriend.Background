@@ -76,6 +76,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
         String changedFileName = FileNameUtil.getFileName(originalFileName);
         //String filePath = ROOT_PATH + SON_PATH + "/" + AVATAR + "/" + username + "/";
         String signName = USER + "/" + AVATAR;
+        // /ROOT_PATH/SON_PATH/user/avatar/${username}/
         String filePath = FileNameUtil.getFilePath(ROOT_PATH, SON_PATH, signName, username);
 
         if ( !FileUtil.uploadByDeleteExistFile(filePath, file, changedFileName) ) {
