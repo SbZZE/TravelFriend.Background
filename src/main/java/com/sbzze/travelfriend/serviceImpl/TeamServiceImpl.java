@@ -43,9 +43,9 @@ public class TeamServiceImpl extends BaseServiceImpl<TeamMapper, Team>  implemen
         team.setTeamName(teamname);
         team.setIntroduction(introduction);
 
-        teamMemberService.addTeamLeader(team.getId() , username);
+        baseMapper.insert(team);
 
-        return baseMapper.insert(team);
+        return teamMemberService.addTeamLeader(team.getId() , username);
     }
 
     //查

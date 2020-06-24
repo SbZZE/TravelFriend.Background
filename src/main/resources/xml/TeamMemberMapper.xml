@@ -8,7 +8,7 @@
         -->
         <constructor>
             <arg column="id" javaType="java.lang.String" jdbcType="CHAR" />
-            <arg column="team_id" javaType="java.lang.String" jdbcType="VARCHAR" />
+            <arg column="team_id" javaType="java.lang.String" jdbcType="CHAR" />
             <arg column="member_name" javaType="java.lang.String" jdbcType="VARCHAR" />
             <arg column="member_nickname" javaType="java.lang.String" jdbcType="VARCHAR" />
             <arg column="isleader" javaType="java.lang.String" jdbcType="VARCHAR" />
