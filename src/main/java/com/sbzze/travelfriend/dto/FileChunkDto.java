@@ -10,11 +10,11 @@ public class FileChunkDto {
     // 相册ID
     private String albumid;
     // 相册类型(用户-USER,团队-TEAM)
-    private Enum albumtype;
+    private int albumtype;
     // 文件名
     private String filename;
     // 文件类型(图片-IMAGE,视频-VIDEO)
-    private Enum filetype;
+    private int filetype;
     // 文件唯一标识(md5)
     private String identifier;
     // 文件总大小

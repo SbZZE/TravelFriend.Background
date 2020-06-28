@@ -25,7 +25,7 @@ public class BreakPointController {
         Object obj = null;
 
         // 团队
-        if (fileChunkDto.getAlbumtype().equals(Constants.AlbumType.TEAM)) {
+        if (fileChunkDto.getAlbumtype() == Constants.TEAM) {
             String fileId = teamAlbumImagesService.uploadImagesOrVideos(fileChunkDto);
             if ( fileId.isEmpty() ) {
                 return new ResultView<>(201,"文件块传输失败");
@@ -35,7 +35,7 @@ public class BreakPointController {
 
         }
         // 个人
-        if (fileChunkDto.getAlbumtype().equals(Constants.AlbumType.USER)) {
+        if (fileChunkDto.getAlbumtype() == Constants.USER) {
 
         }
         return obj;

@@ -18,12 +18,10 @@ public interface Constants {
 
 
     // 文件类型
-    enum FileType {
-        IMAGE,VIDEO
-    }
+    int IMAGE_INT = 0;
+    int VIDEO_INT = 1;
     // 相册类型
-    enum AlbumType {
-        USER,TEAM
-    }
+    int USER = 0;
+    int TEAM = 1;
 
 }

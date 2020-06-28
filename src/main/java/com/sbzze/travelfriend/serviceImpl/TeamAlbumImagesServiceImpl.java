@@ -91,10 +91,10 @@ public class TeamAlbumImagesServiceImpl extends BaseServiceImpl<TeamAlbumImagesM
         String signName = TEAM + "/" + ALBUM;
         String fileType = null;
 
-        if (fileChunkDto.getFiletype().equals(Constants.FileType.IMAGE)) {
+        if (fileChunkDto.getFiletype() == Constants.IMAGE_INT) {
             fileType = Constants.IMAGE;
         }
-        if (fileChunkDto.getFiletype().equals(Constants.FileType.VIDEO)) {
+        if (fileChunkDto.getFiletype() == Constants.VIDEO_INT) {
             fileType = Constants.VIDEO;
         }
         String tagName = fileChunkDto.getTargetid() + "/" + fileChunkDto.getAlbumid() + "/" + fileType;
