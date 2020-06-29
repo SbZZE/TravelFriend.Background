@@ -292,6 +292,7 @@ public class FileUtil {
 
             if (isFinish) {
                  file = FileNameUtil.renameFile(tempFile, fileChunkDto.getFilename());
+                 tempFile.delete();
             }
         } catch (IOException e) {
             e.printStackTrace();
