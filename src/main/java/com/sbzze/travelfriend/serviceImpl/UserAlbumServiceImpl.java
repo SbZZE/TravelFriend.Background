@@ -46,33 +46,37 @@ public class UserAlbumServiceImpl extends BaseServiceImpl<UserAlbumMapper, UserA
     }
 
     @Override
-    public int addAlbum( String username, String albumname, String introduction, MultipartFile cover ) {
+    public String addAlbum( UserDto.UserAlbumDto userAlbumDto ) {
 
-        String originalFileName = cover.getOriginalFilename();
+        String originalFileName = userAlbumDto.getCover().getOriginalFilename();
         String changedFileName = FileNameUtil.getFileName(originalFileName);
         String signName = USER + "/" + ALBUM;
-        String tagName = username + "/" + albumname + "/" + COVER;
-        // TODO 修改保存地址
-        // 封面
-        // /ROOT_PATH/SON_PATH/user/album/${username}/${albumname}/cover/
+
+        String albumId = UUIDUtil.getUUID();
+        String tagName = userAlbumDto.getUsername() + "/" + albumId + "/" + COVER;
+
+        // /ROOT_PATH/SON_PATH/user/album/${username}/${albumid}/cover/
         String filePath = FileNameUtil.getFilePath(ROOT_PATH, SON_PATH, signName, tagName);
 
-        if ( !FileUtil.compressFile(cover, filePath, changedFileName, PREFIX, 0.5f, 0.5f) ) {
+        if ( !FileUtil.compressFile(userAlbumDto.getCover(), filePath, changedFileName, PREFIX, 0.5f, 0.5f) ) {
             //TODO 状态码修改
-            return -1;
+            return null;
         }
 
         UserAlbum album = new UserAlbum();
-        album.setId(UUIDUtil.getUUID());
-        album.setUserId(userService.findUserByName(username).getId());
-        album.setAlbumname(albumname);
-        album.setIntroduction(introduction);
+        album.setId(albumId);
+        album.setUserId(userService.findUserByName(userAlbumDto.getUsername()).getId());
+        album.setAlbumname(userAlbumDto.getAlbumname());
+        album.setIntroduction(userAlbumDto.getIntroduction());
 
         String urlPath = FileNameUtil.getUrlPath(POST, SON_PATH, signName, tagName);
         String insertFileName = urlPath + PREFIX + changedFileName;
         album.setCover(insertFileName);
-
-        return baseMapper.insert(album);
+        if ( baseMapper.insert(album) <= 0 ){
+            return null;
+        } else {
+            return albumId;
+        }
 
     }
 
@@ -85,6 +89,7 @@ public class UserAlbumServiceImpl extends BaseServiceImpl<UserAlbumMapper, UserA
         UserDto.UserAlbumInfoDto userAlbumInfoDto = new UserDto.UserAlbumInfoDto();
         List<Object> userAlbumInfoDtos = new ArrayList<>();
         for (UserAlbum album : albums) {
+            userAlbumInfoDto.setAlbumid(album.getId());
             userAlbumInfoDto.setAlbumname(album.getAlbumname());
             userAlbumInfoDto.setIntroduction(album.getIntroduction());
 
@@ -95,8 +100,8 @@ public class UserAlbumServiceImpl extends BaseServiceImpl<UserAlbumMapper, UserA
     }
 
     @Override
-    public byte[] getAlbumCover( String username, String albumname ) {
-        UserAlbum userAlbum = findAlbumByUserIdAndAlbumName(userService.findUserByName(username).getId(), albumname);
+    public byte[] getAlbumCover( String albumid ) {
+        UserAlbum userAlbum = baseMapper.selectById(albumid);
 
         if ( null == userAlbum ) {
             return null;

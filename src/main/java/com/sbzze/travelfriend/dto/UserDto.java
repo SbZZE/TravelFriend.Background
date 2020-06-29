@@ -44,6 +44,7 @@ public class UserDto {
 
     @Data
     public static class UserAlbumInfoDto {
+        private String albumid;
         private String albumname;
         private String introduction;
     }
