@@ -26,13 +26,7 @@ public class BreakPointController {
         // 团队
         if (fileChunkDto.getAlbumtype() == Constants.TEAM) {
             String fileId = teamAlbumImagesService.uploadImagesOrVideos(fileChunkDto);
-            System.out.println(fileId);
-            if ( fileId == null ) {
-                return new ResultView<>(201,"文件块传输失败");
-            } else {
-                return new ResultView<>(200,"文件块传输成功", fileId);
-            }
-
+            return new ResultView<>(200,"文件块传输成功", fileId);
         }
         // 个人
         if (fileChunkDto.getAlbumtype() == Constants.USER) {
