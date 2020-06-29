@@ -11,7 +11,7 @@ public interface Constants {
 
     // FFmpeg
     //Linux
-    String FFMPEG_PATH = "ffmpeg";
+    String FFMPEG_PATH = "/root/ffmpeg/ffmpeg-4.2.3/bin/./ffmpeg";
     //windows
     //String FFMPEG_PATH = "";
 
