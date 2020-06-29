@@ -9,11 +9,11 @@ public class FileChunkDto {
     private String targetid;
     // 相册ID
     private String albumid;
-    // 相册类型(用户-USER,团队-TEAM)
+    // 相册类型(用户-0,团队-1)
     private int albumtype;
     // 文件名
     private String filename;
-    // 文件类型(图片-IMAGE,视频-VIDEO)
+    // 文件类型(图片-0,视频-1)
     private int filetype;
     // 文件唯一标识(md5)
     private String identifier;

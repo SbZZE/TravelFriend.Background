@@ -15,7 +15,7 @@ public class TeamAlbumImages {
     @TableId
     private String id;
 
-    @TableField("team_id")
+    @TableField("album_id")
     private String albumId;
 
     @TableField("image_type")

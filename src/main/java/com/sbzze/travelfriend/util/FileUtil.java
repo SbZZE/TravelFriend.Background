@@ -8,9 +8,12 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.apache.commons.io.FileUtils;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,11 +36,20 @@ import java.util.List;
  *
  **/
 @Slf4j
+@Component
 public class FileUtil {
 
 
     @Autowired
-    private static RedisTemplate<String, Object> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
+
+    public static FileUtil fileUtil;
+
+    @PostConstruct  //用于在依赖关系注入完成之后需要执行的方法上，以执行任何初始化
+    public void init() {
+        fileUtil = this;
+        fileUtil.redisTemplate = this.redisTemplate;
+    }
 
     /**
      * 上传文件(流式上传)
@@ -330,17 +342,17 @@ public class FileUtil {
         String confFileName = FileNameUtil.getNameWithOutSuffix(filename);
         // 上传完成
         if (isComplete == Byte.MAX_VALUE) {
-            redisTemplate.opsForHash().put(Constants.FILE_UPLOAD_STATUS, fileChunkDto.getIdentifier(), "true");
-            redisTemplate.opsForValue().set(Constants.FILE_MD5_KEY + fileChunkDto.getIdentifier(), filePath + filename);
+            fileUtil.redisTemplate.opsForHash().put(Constants.FILE_UPLOAD_STATUS, fileChunkDto.getIdentifier(), "true");
+            fileUtil.redisTemplate.opsForValue().set(Constants.FILE_MD5_KEY + fileChunkDto.getIdentifier(), filePath + filename);
             //删除缓存
-            redisTemplate.delete(Constants.FILE_MD5_KEY + fileChunkDto.getIdentifier());
+            fileUtil.redisTemplate.delete(Constants.FILE_MD5_KEY + fileChunkDto.getIdentifier());
             confFile.delete();
             return true;
         } else {
             // 上传失败，更新Redis信息
-            if (!redisTemplate.opsForHash().hasKey(Constants.FILE_UPLOAD_STATUS, fileChunkDto.getIdentifier())) {
-                redisTemplate.opsForHash().put(Constants.FILE_UPLOAD_STATUS, fileChunkDto.getIdentifier(), "false");
-                redisTemplate.opsForValue().set(Constants.FILE_MD5_KEY + fileChunkDto.getIdentifier(),
+            if (!fileUtil.redisTemplate.opsForHash().hasKey(Constants.FILE_UPLOAD_STATUS, fileChunkDto.getIdentifier())) {
+                fileUtil.redisTemplate.opsForHash().put(Constants.FILE_UPLOAD_STATUS, fileChunkDto.getIdentifier(), "false");
+                fileUtil.redisTemplate.opsForValue().set(Constants.FILE_MD5_KEY + fileChunkDto.getIdentifier(),
                         filePath + confFileName + ".conf");
 
             }
@@ -389,7 +401,8 @@ public class FileUtil {
         MultipartFile multipartFile = null;
         try {
             FileInputStream input = new FileInputStream(file);
-            multipartFile =new MockMultipartFile("file", file.getName(), "text/plain", IOUtils.toByteArray(input));
+            multipartFile = new MockMultipartFile("file", file.getName(), "text/plain", IOUtils.toByteArray(input));
+            input.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

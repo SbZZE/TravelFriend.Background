@@ -3,9 +3,10 @@ package com.sbzze.travelfriend.util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 
 /**
  * @description: 生成文件名工具类
@@ -90,12 +91,26 @@ public class FileNameUtil {
 
         String filePath = toBeRenamed.getParent();
         File newFile = new File(filePath + File.separatorChar + toFileNewName);
-        //修改文件名
-        if (toBeRenamed.renameTo(newFile)) {
-            return newFile;
-        } else {
-            return null;
+
+        try {
+            FileInputStream inputStream = new FileInputStream(toBeRenamed);
+            FileOutputStream outputStream = new FileOutputStream(newFile);
+            int len=0;
+            //一次读取多少字节的文件,这里可以选择tmp.txt的所有字节长度
+            byte[] b = new byte[inputStream.available()];
+            while((len=inputStream.read(b))!=-1){
+                outputStream.write(b,0,len);
+                outputStream.flush();
+            }
+            inputStream.close();
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+        toBeRenamed.delete();
+        return newFile;
+
 
     }
 }

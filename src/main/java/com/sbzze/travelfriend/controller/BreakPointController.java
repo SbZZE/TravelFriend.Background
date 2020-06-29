@@ -6,10 +6,8 @@ import com.sbzze.travelfriend.model.ResultView;
 import com.sbzze.travelfriend.service.TeamAlbumImagesService;
 import com.sbzze.travelfriend.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/breakpoint")
@@ -21,13 +19,15 @@ public class BreakPointController {
 
     @UserLoginToken
     @PostMapping("/upload")
-    public Object upload( @RequestBody FileChunkDto fileChunkDto ) {
+    public Object upload(FileChunkDto fileChunkDto, @RequestParam MultipartFile file) {
+        fileChunkDto.setFilechunk(file);
         Object obj = null;
 
         // 团队
         if (fileChunkDto.getAlbumtype() == Constants.TEAM) {
             String fileId = teamAlbumImagesService.uploadImagesOrVideos(fileChunkDto);
-            if ( fileId.isEmpty() ) {
+            System.out.println(fileId);
+            if ( fileId == null ) {
                 return new ResultView<>(201,"文件块传输失败");
             } else {
                 return new ResultView<>(200,"文件块传输成功", fileId);
