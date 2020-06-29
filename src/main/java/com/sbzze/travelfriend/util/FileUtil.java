@@ -202,6 +202,9 @@ public class FileUtil {
         String fileName = filePath + prefix + changedFileName;
 
         File tempFile = new File(fileName);
+        if (!tempFile.getParentFile().exists()) {
+            tempFile.getParentFile().mkdirs();
+        }
         try {
             Thumbnails.of(file.getInputStream())
                       .scale(scale)

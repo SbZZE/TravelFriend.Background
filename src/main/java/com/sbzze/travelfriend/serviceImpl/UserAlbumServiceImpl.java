@@ -51,10 +51,11 @@ public class UserAlbumServiceImpl extends BaseServiceImpl<UserAlbumMapper, UserA
         String originalFileName = cover.getOriginalFilename();
         String changedFileName = FileNameUtil.getFileName(originalFileName);
         String signName = USER + "/" + ALBUM;
+        String tagName = username + "/" + albumname + "/" + COVER;
         // TODO 修改保存地址
         // 封面
-        // /ROOT_PATH/SON_PATH/user/album/${username}/${albumname}/avatar/
-        String filePath = FileNameUtil.getFilePath(ROOT_PATH, SON_PATH, signName + "/" + COVER, username);
+        // /ROOT_PATH/SON_PATH/user/album/${username}/${albumname}/cover/
+        String filePath = FileNameUtil.getFilePath(ROOT_PATH, SON_PATH, signName, tagName);
 
         if ( !FileUtil.compressFile(cover, filePath, changedFileName, PREFIX, 0.5f, 0.5f) ) {
             //TODO 状态码修改
@@ -67,7 +68,7 @@ public class UserAlbumServiceImpl extends BaseServiceImpl<UserAlbumMapper, UserA
         album.setAlbumname(albumname);
         album.setIntroduction(introduction);
 
-        String urlPath = FileNameUtil.getUrlPath(POST, SON_PATH, signName + "/" + COVER, username);
+        String urlPath = FileNameUtil.getUrlPath(POST, SON_PATH, signName, tagName);
         String insertFileName = urlPath + PREFIX + changedFileName;
         album.setCover(insertFileName);
 
