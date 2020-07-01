@@ -30,7 +30,7 @@ public class FileNameUtil {
      * @return
      */
     public static String getNameWithOutSuffix(String fileName) {
-        return fileName.substring(fileName.indexOf("."));
+        return fileName.substring(0, fileName.lastIndexOf("."));
     }
 
     /**
