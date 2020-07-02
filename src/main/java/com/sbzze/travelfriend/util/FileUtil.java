@@ -172,26 +172,12 @@ public class FileUtil {
 
         try {
             URL httpUrl = new URL(url);
-            HttpURLConnection conn = (HttpURLConnection)httpUrl.openConnection();
-            conn.setRequestMethod("GET");
-            conn.setDoInput(true);
-            conn.setDoOutput(true);
-            // post方式不能使用缓存
-            conn.setUseCaches(false);
-            //连接指定的资源
-            conn.connect();
 
-            InputStream inputStream = conn.getInputStream();
-            //ByteArrayOutputStream bos = new ByteArrayOutputStream(1024);
+            File tempFile = File.createTempFile("temp", ".png");
+            ImageIO.write(ImageIO.read(httpUrl), "PNG", tempFile);
+            byte[] bytes = FileUtils.readFileToByteArray(tempFile);
 
-            byte[] bytes = new byte[conn.getContentLength()];
-            //int res = 0;
-            while (inputStream.read(bytes, 0, conn.getContentLength()) != -1);
-            //inputStream.read(bytes, 0, conn.getContentLength());
-
-            inputStream.close();
-            conn.disconnect();
-
+            tempFile.delete();
             return bytes;
         } catch (IOException e) {
            e.printStackTrace();
@@ -199,6 +185,34 @@ public class FileUtil {
         }
 
 
+    }
+
+    /**
+     * 下载指定宽高的文件流
+     * @param url
+     * @param width
+     * @param height
+     * @return
+     */
+    public static byte[] downloadFileBytesByWidthAndHeight( String url , int width, int height ) {
+        try {
+            File tempFile = File.createTempFile("temp", ".png");
+            URL httpUrl = new URL(url);
+            ImageIO.write(ImageIO.read(httpUrl), "PNG", tempFile);
+
+            Thumbnails.of(tempFile)
+                    .size(width, height)
+                    .keepAspectRatio(false)
+                    .toFile(tempFile);
+
+            byte[] bytes = FileUtils.readFileToByteArray(tempFile);
+
+            tempFile.delete();
+            return bytes;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
@@ -454,4 +468,5 @@ public class FileUtil {
         }
         return true;
     }
+
 }

@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -144,9 +146,9 @@ public class UserController {
     @UserLoginToken
     @GetMapping("/avatar")
     @ResponseBody
-    public byte[] getUserAvatar( String username, String isCompress ){
+    public byte[] getUserAvatar(String username, String isCompress, String width, String height){
         if (isCompress.equals("true")) {
-            return userService.getCompressAvatar(username);
+            return userService.getCompressAvatar(username, width, height);
         } else if (isCompress.equals("false")){
             return userService.getAvatar(username);
         } else {

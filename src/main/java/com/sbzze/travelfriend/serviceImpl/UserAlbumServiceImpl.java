@@ -58,7 +58,7 @@ public class UserAlbumServiceImpl extends BaseServiceImpl<UserAlbumMapper, UserA
         // /ROOT_PATH/SON_PATH/user/album/${username}/${albumid}/cover/
         String filePath = FileNameUtil.getFilePath(ROOT_PATH, SON_PATH, signName, tagName);
 
-        if ( !FileUtil.compressFile(userAlbumDto.getCover(), filePath, changedFileName, PREFIX, 0.5f, 0.5f) ) {
+        if ( !FileUtil.compressFile(userAlbumDto.getCover(), filePath, changedFileName, PREFIX, 1f, 0.2f) ) {
             //TODO 状态码修改
             return null;
         }

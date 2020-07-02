@@ -10,6 +10,7 @@ import com.sbzze.travelfriend.util.UUIDUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 
 
 @Service
@@ -114,18 +115,16 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
         return fileBytes;
     }
 
+
     @Override
-    public byte[] getCompressAvatar(String username ) {
+    public byte[] getCompressAvatar(String username, String width, String height) {
         User user = baseMapper.findUserByName(username);
-        if ( null == user ) {
-            return null;
-        }
 
         String compressAvatarUrl = user.getCompressAvatar();
 
-        byte[] fileBytes = FileUtil.downloadFileBytes(compressAvatarUrl);
+        return FileUtil.downloadFileBytesByWidthAndHeight(compressAvatarUrl, Integer.valueOf(width), Integer.valueOf(height));
 
-        return fileBytes;
+
     }
 
     //删

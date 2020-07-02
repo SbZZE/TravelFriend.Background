@@ -7,6 +7,8 @@ import com.sbzze.travelfriend.dto.UserDto.UserInfoWithOutAvatarDto;
 import com.sbzze.travelfriend.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+
 
 public interface UserService extends IService<User> {
     int insertUser(String username, String password, String nickname);
@@ -23,7 +25,7 @@ public interface UserService extends IService<User> {
 
     byte[] getAvatar(String username);
 
-    byte[] getCompressAvatar(String username);
+    byte[] getCompressAvatar(String username, String width, String height);
 
     int deleteUser(String username);
 }

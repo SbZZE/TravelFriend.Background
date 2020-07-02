@@ -106,7 +106,7 @@ public class UserAlbumImagesServiceImpl extends BaseServiceImpl<UserAlbumImagesM
             //生成压缩图
             MultipartFile multipartFile = FileUtil.transferMultipartFileToFile(tempFile);
             if (fileType.equals(Constants.IMAGE)) {
-                FileUtil.compressFile(multipartFile, filePath, fileChunkDto.getFilename(), PREFIX, 0.5f, 0.5f);
+                FileUtil.compressFile(multipartFile, filePath, fileChunkDto.getFilename(), PREFIX, 1f, 0.2f);
 
             }
             if (fileType.equals(Constants.VIDEO)) {
