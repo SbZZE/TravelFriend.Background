@@ -100,7 +100,7 @@ public class UserAlbumServiceImpl extends BaseServiceImpl<UserAlbumMapper, UserA
     }
 
     @Override
-    public byte[] getAlbumCover( String albumid ) {
+    public byte[] getAlbumCover( String albumid , String width, String height ) {
         UserAlbum userAlbum = baseMapper.selectById(albumid);
 
         if ( null == userAlbum ) {
@@ -109,7 +109,7 @@ public class UserAlbumServiceImpl extends BaseServiceImpl<UserAlbumMapper, UserA
 
         String coverUrl = userAlbum.getCover();
 
-        byte[] fileBytes = FileUtil.downloadFileBytes(coverUrl);
+        byte[] fileBytes = FileUtil.downloadFileBytesByWidthAndHeight(coverUrl, Integer.valueOf(width), Integer.valueOf(height));
         return fileBytes;
 
     }

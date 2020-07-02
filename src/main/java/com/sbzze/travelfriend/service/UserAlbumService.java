@@ -20,5 +20,5 @@ public interface UserAlbumService extends IService<UserAlbum> {
 
     List<Object> getAlbumInfo(String username);
 
-    byte[] getAlbumCover(String albumid);
+    byte[] getAlbumCover(String albumid, String width, String height);
 }

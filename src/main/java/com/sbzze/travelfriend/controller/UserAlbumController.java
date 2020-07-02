@@ -45,8 +45,8 @@ public class UserAlbumController {
     @UserLoginToken
     @GetMapping("/cover")
     @ResponseBody
-    public byte[] getAlbumCover( String albumid ) {
-        return userAlbumService.getAlbumCover(albumid);
+    public byte[] getAlbumCover( String albumid, String width, String height ) {
+        return userAlbumService.getAlbumCover(albumid, width, height);
     }
 
 }
