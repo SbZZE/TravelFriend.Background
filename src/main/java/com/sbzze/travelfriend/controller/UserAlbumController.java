@@ -34,19 +34,12 @@ public class UserAlbumController {
 
     }
 
-    // 获取相册信息
+    // 获取某个用户的相册
     @UserLoginToken
-    @GetMapping("/info")
+    @GetMapping
     public Object getAlbumInfo( String username ) {
         return new ResultView<>(200,"获取成功", userAlbumService.getAlbumInfo(username));
     }
 
-    // 获取相册封面
-    @UserLoginToken
-    @GetMapping("/cover")
-    @ResponseBody
-    public byte[] getAlbumCover( String albumid, String width, String height ) {
-        return userAlbumService.getAlbumCover(albumid, width, height);
-    }
 
 }

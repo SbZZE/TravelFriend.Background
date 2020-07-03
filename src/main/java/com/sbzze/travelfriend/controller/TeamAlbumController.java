@@ -21,17 +21,9 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/api/team/album")
 public class TeamAlbumController {
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private TeamService teamService;
 
     @Autowired
     private TeamAlbumService teamAlbumService;
-
-    @Autowired
-    private UserTokenService userTokenService;
 
     @Autowired
     RabbitTemplate rabbitTemplate;
@@ -62,19 +54,5 @@ public class TeamAlbumController {
 
     }
 
-    //获取相册封面
-    @UserLoginToken
-    @GetMapping("/cover")
-    @ResponseBody
-    public byte[] getTeamAlbumCover(String albumid , String isCompress){
-        if (isCompress.equals("true")) {
-            return teamAlbumService.getCompressTeamAlbumCover(albumid);
-        } else if (isCompress.equals("false")){
-            return teamAlbumService.getTeamAlbumCover(albumid);
-        } else {
-            return null;
-        }
-
-    }
 
 }
