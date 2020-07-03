@@ -46,6 +46,15 @@ public class UserAlbumServiceImpl extends BaseServiceImpl<UserAlbumMapper, UserA
     }
 
     @Override
+    public int updateAlbumInfo( String id, String albumname, String introduction ) {
+        UserAlbum userAlbum = baseMapper.selectById(id);
+        userAlbum.setAlbumname(albumname);
+        userAlbum.setIntroduction(introduction);
+
+        return baseMapper.updateById(userAlbum);
+    }
+
+    @Override
     public String addAlbum( UserDto.UserAlbumDto userAlbumDto ) {
 
         String originalFileName = userAlbumDto.getCover().getOriginalFilename();

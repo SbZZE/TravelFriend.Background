@@ -3,6 +3,7 @@ package com.sbzze.travelfriend.serviceImpl;
 import com.sbzze.travelfriend.dto.TeamDto;
 import com.sbzze.travelfriend.entity.Team;
 import com.sbzze.travelfriend.entity.TeamAlbum;
+import com.sbzze.travelfriend.entity.UserAlbum;
 import com.sbzze.travelfriend.mapper.TeamAlbumMapper;
 import com.sbzze.travelfriend.service.TeamAlbumService;
 import com.sbzze.travelfriend.service.TeamService;
@@ -16,6 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.sbzze.travelfriend.util.FileUtil.downloadFileBytesByWidthAndHeight;
 
 /**
  * @Author:Zzq
@@ -43,6 +46,16 @@ public class TeamAlbumServiceImpl extends BaseServiceImpl<TeamAlbumMapper , Team
     public TeamAlbum findTeamAlbumByAlbumId(String albumid){
         return baseMapper.findTeamAlbumByAlbumId(albumid);
     }
+
+    @Override
+    public int updateAlbumInfo( String id, String albumname, String introduction ) {
+        TeamAlbum teamAlbum = baseMapper.selectById(id);
+        teamAlbum.setAlbumname(albumname);
+        teamAlbum.setIntroduction(introduction);
+
+        return baseMapper.updateById(teamAlbum);
+    }
+
 
     //新建团队相册
     @Override
@@ -121,13 +134,13 @@ public class TeamAlbumServiceImpl extends BaseServiceImpl<TeamAlbumMapper , Team
     }
 
     @Override
-    public byte[] getCompressTeamAlbumCover(String albumid){
+    public byte[] getCompressTeamAlbumCover(String albumid, String width, String height){
         TeamAlbum teamAlbum = findTeamAlbumByAlbumId(albumid);
         if (null == teamAlbum){
             return null;
         }
         String coverUrl = teamAlbum.getCompressCover();
-        byte[] fileBytes = FileUtil.downloadFileBytes(coverUrl);
+        byte[] fileBytes = downloadFileBytesByWidthAndHeight(coverUrl, Integer.valueOf(width), Integer.valueOf(height));
         return fileBytes;
     }
 }

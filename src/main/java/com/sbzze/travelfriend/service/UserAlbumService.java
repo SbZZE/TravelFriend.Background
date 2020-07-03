@@ -16,6 +16,8 @@ public interface UserAlbumService extends IService<UserAlbum> {
 
     boolean isAlbumExist(String username, String albumname);
 
+    int updateAlbumInfo(String id, String albumname, String introduction);
+
     String addAlbum(UserDto.UserAlbumDto userAlbumDto);
 
     List<Object> getAlbumInfo(String username);

@@ -13,6 +13,8 @@ import java.util.List;
  * @Time:16:33
  */
 public interface TeamAlbumService extends IService<TeamAlbum> {
+    int updateAlbumInfo(String id, String albumname, String introduction);
+
     int addTeamAlbum(String teamid , String albumname , String introduction , MultipartFile cover);
 
     List<Object> getAlbumInfo(String teamid);
@@ -27,5 +29,5 @@ public interface TeamAlbumService extends IService<TeamAlbum> {
 
     byte[] getTeamAlbumCover(String albumid);
 
-    byte[] getCompressTeamAlbumCover(String albumid);
+    byte[] getCompressTeamAlbumCover(String albumid,String width, String height);
 }
