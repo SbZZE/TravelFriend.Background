@@ -71,11 +71,8 @@ public class FileUtil {
             outputStream.close();
 
             return true;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return false;
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("文件上传失败", LogsUtil.getStackTrace(e));
             return false;
         }
     }
@@ -180,7 +177,7 @@ public class FileUtil {
             tempFile.delete();
             return bytes;
         } catch (IOException e) {
-           e.printStackTrace();
+            log.error("文件下载失败", LogsUtil.getStackTrace(e));
            return null;
         }
 
@@ -210,7 +207,7 @@ public class FileUtil {
             tempFile.delete();
             return bytes;
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("文件下载失败", LogsUtil.getStackTrace(e));
             return null;
         }
     }
@@ -240,7 +237,7 @@ public class FileUtil {
             file.getInputStream().close();
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("图片压缩上传失败", LogsUtil.getStackTrace(e));
             return false;
         }
     }
@@ -309,7 +306,7 @@ public class FileUtil {
                  tempFile.delete();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("mappedByteBuffer上传失败",LogsUtil.getStackTrace(e));
         }
 
         return file;
@@ -345,7 +342,7 @@ public class FileUtil {
             isFinish = setUploadProgress2Redis(fileChunkDto, filePath, confFile, isComplete);
 
         } catch (IOException e) {
-            log.error(e.getMessage(), e);
+            log.error("检查/修改上传文件进度失败",LogsUtil.getStackTrace(e));
         }
 
         return isFinish;
@@ -369,7 +366,6 @@ public class FileUtil {
                 fileUtil.redisTemplate.opsForHash().put(Constants.FILE_UPLOAD_STATUS, fileChunkDto.getIdentifier(), "false");
                 fileUtil.redisTemplate.opsForValue().set(Constants.FILE_MD5_KEY + fileChunkDto.getIdentifier(),
                         filePath + confFileName + ".conf");
-
             }
 
             return false;
@@ -394,15 +390,15 @@ public class FileUtil {
                                 new Object[0]);
                         cleaner.clean();
                     } catch (Exception e) {
-                        log.error("clean MappedByteBuffer error!!!", e);
+                        log.error("释放mapped线程失败", LogsUtil.getStackTrace(e));
                     }
-                    log.info("clean MappedByteBuffer completed!!!");
+                    log.info("释放mapped线程成功");
                     return null;
                 }
             });
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("释放mapped线程失败", LogsUtil.getStackTrace(e));
         }
     }
 
@@ -419,7 +415,7 @@ public class FileUtil {
             multipartFile = new MockMultipartFile("file", file.getName(), "text/plain", IOUtils.toByteArray(input));
             input.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("MultipartFile转File失败",LogsUtil.getStackTrace(e));
         }
         return multipartFile;
     }
@@ -437,7 +433,7 @@ public class FileUtil {
         // 原地址 + 前缀 + 文件名.jpg
         String compressName = file.getParent() + "/" + prefix + file.getName().substring(0, file.getName().indexOf(".")) + ".jpg";
         if (!file.exists()) {
-            System.err.println("file " + videoName + " is not exist!");
+            log.warn("文件" + videoName + "不存在");
             return false;
         }
         List<String> commands = new java.util.ArrayList<String>();
@@ -461,9 +457,9 @@ public class FileUtil {
             ProcessBuilder builder = new ProcessBuilder();
             builder.command(commands);
             builder.start();
-            System.out.println("截取成功");
+            log.info("视频缩略图截取成功");
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("视频缩略图截取失败", LogsUtil.getStackTrace(e));
             return false;
         }
         return true;

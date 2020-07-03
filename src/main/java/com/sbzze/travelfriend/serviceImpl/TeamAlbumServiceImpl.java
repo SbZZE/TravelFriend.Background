@@ -9,6 +9,7 @@ import com.sbzze.travelfriend.service.TeamService;
 import com.sbzze.travelfriend.util.FileNameUtil;
 import com.sbzze.travelfriend.util.FileUtil;
 import com.sbzze.travelfriend.util.UUIDUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +23,7 @@ import java.util.List;
  * @Date:2020/6/3
  * @Time:16:39
  */
+@Slf4j
 @Service
 public class TeamAlbumServiceImpl extends BaseServiceImpl<TeamAlbumMapper , TeamAlbum> implements TeamAlbumService {
     @Autowired
@@ -50,10 +52,12 @@ public class TeamAlbumServiceImpl extends BaseServiceImpl<TeamAlbumMapper , Team
         String signName = TEAM + "/" + ALBUM;
         String filePath = FileNameUtil.getFilePath(ROOT_PATH , SON_PATH , signName  , teamid);
         if (!FileUtil.uploadByDeleteExistFile(filePath , cover , changedFileName)){
+            log.error("团队封面上传失败");
             return -1;
         }
 
         if (!FileUtil.compressFile(cover, filePath, changedFileName, PREFIX, 1f, 0.2f)) {
+            log.error("团队压缩封面上传失败");
             return -1;
         }
         TeamAlbum album = new TeamAlbum();
@@ -94,9 +98,7 @@ public class TeamAlbumServiceImpl extends BaseServiceImpl<TeamAlbumMapper , Team
     //相册是否已经存在
     @Override
     public boolean isAlbumExist(String teamid, String albumname){
-        System.out.println(teamid);
         Team team = teamService.findTeamByTeamId(teamid);
-        System.out.println(team);
         TeamAlbum teamalbum = findTeamAlbumByTeamIdAndAlbumName(team.getId(), albumname);
         if ( null == teamalbum ) {
             return false;

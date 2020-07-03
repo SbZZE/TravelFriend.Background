@@ -8,16 +8,14 @@ import com.sbzze.travelfriend.util.Constants;
 import com.sbzze.travelfriend.util.FileNameUtil;
 import com.sbzze.travelfriend.util.FileUtil;
 import com.sbzze.travelfriend.util.UUIDUtil;
-import org.apache.commons.io.IOUtils;
-import org.springframework.mock.web.MockMultipartFile;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.List;
 
+@Slf4j
 @Service
 public class TeamAlbumImagesServiceImpl extends BaseServiceImpl<TeamAlbumImagesMapper, TeamAlbumImages> implements TeamAlbumImagesService {
 
@@ -45,6 +43,7 @@ public class TeamAlbumImagesServiceImpl extends BaseServiceImpl<TeamAlbumImagesM
         if ( baseMapper.insert(teamAlbumImages) > 0 ) {
             return id;
         } else {
+            log.error("相册图片/视频插入失败");
             return null;
         }
     }

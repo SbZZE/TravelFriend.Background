@@ -7,12 +7,13 @@ import com.sbzze.travelfriend.service.UserService;
 import com.sbzze.travelfriend.util.FileNameUtil;
 import com.sbzze.travelfriend.util.FileUtil;
 import com.sbzze.travelfriend.util.UUIDUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 
-
+@Slf4j
 @Service
 public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implements UserService {
 
@@ -81,11 +82,13 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
         String filePath = FileNameUtil.getFilePath(ROOT_PATH, SON_PATH, signName, username);
 
         if ( !FileUtil.uploadByDeleteExistFile(filePath, file, changedFileName) ) {
+            log.error("用户头像更新失败");
             return -1;
         }
 
         //压缩图片并上传
        if ( !FileUtil.compressFile(file, filePath, changedFileName, PREFIX, 1f, 0.2f) ) {
+           log.error("用户压缩头像更新失败");
            return -1;
        }
 

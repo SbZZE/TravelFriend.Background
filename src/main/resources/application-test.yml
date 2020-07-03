@@ -38,3 +38,6 @@ mysys:
 login:
   cache:
     type: memory #redis or memory
+
+logging:
+  config: classpath:log4j2.xml

@@ -12,6 +12,7 @@ import com.sbzze.travelfriend.util.Constants;
 import com.sbzze.travelfriend.util.FileNameUtil;
 import com.sbzze.travelfriend.util.FileUtil;
 import com.sbzze.travelfriend.util.UUIDUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.util.List;
 
+@Slf4j
 @Service
 public class UserAlbumImagesServiceImpl extends BaseServiceImpl<UserAlbumImagesMapper, UserAlbumImages> implements UserAlbumImagesService {
 
@@ -56,6 +58,7 @@ public class UserAlbumImagesServiceImpl extends BaseServiceImpl<UserAlbumImagesM
         if ( baseMapper.insert(userAlbumImages) > 0 ) {
             return id;
         } else {
+            log.error("相册图片/视频插入失败");
             return null;
         }
     }
