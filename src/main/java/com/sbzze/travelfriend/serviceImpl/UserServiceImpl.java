@@ -123,6 +123,9 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
     public byte[] getCompressAvatar(String username, String width, String height) {
         User user = baseMapper.findUserByName(username);
 
+        if ( user == null || user.getCompressAvatar() == null ) {
+            return null;
+        }
         String compressAvatarUrl = user.getCompressAvatar();
 
         return FileUtil.downloadFileBytesByWidthAndHeight(compressAvatarUrl, Integer.valueOf(width), Integer.valueOf(height));
