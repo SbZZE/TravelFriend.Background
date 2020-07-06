@@ -10,22 +10,26 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("user_album_images")
-public class UserAlbumImages {
-
+@TableName("album")
+public class Album {
     @TableId
     private String id;
 
-    @TableField("album_id")
-    private String albumId;
+    @TableField("type")
+    private String type;
 
-    @TableField("image_type")
-    private String imageType;
+    @TableField("type_id")
+    private String typeId;
 
-    @TableField("address")
-    private String address;
+    @TableField("albumname")
+    private String albumname;
 
-    @TableField("compress_address")
-    private String compressAddress;
+    @TableField("introduction")
+    private String introduction;
 
+    @TableField("count")
+    private String count;
+
+    @TableField("cover")
+    private String cover;
 }

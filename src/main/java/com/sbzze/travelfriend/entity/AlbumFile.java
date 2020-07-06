@@ -10,21 +10,20 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("team_album_images")
-public class TeamAlbumImages {
+@TableName("album_file")
+public class AlbumFile {
     @TableId
     private String id;
 
     @TableField("album_id")
     private String albumId;
 
-    @TableField("image_type")
-    private String imageType;
+    @TableField("type")
+    private String type;
 
     @TableField("address")
     private String address;
 
     @TableField("compress_address")
     private String compressAddress;
-
 }

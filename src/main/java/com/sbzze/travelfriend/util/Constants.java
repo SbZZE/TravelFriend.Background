@@ -5,9 +5,11 @@ public interface Constants {
     String FILE_MD5_KEY = "FILE_MD5:";
     String FILE_UPLOAD_STATUS = "FILE_UPLOAD_STATUS";
 
-    // image_constants表
+    // constants表
     String IMAGE = "image";
     String VIDEO = "video";
+    String USER = "user";
+    String TEAM = "team";
 
     // FFmpeg
     //Linux
@@ -21,7 +23,10 @@ public interface Constants {
     int IMAGE_INT = 0;
     int VIDEO_INT = 1;
     // 相册类型
-    int USER = 0;
-    int TEAM = 1;
+    int USER_INT = 0;
+    int TEAM_INT = 1;
+
+    String ALBUM = "album";
+    String COVER = "cover";
 
 }

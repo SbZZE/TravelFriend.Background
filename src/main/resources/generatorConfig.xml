@@ -43,7 +43,7 @@
         </javaClientGenerator>
 
         <!--  指定表生成，全部为%  -->
-        <table tableName="team_album_images" schema="TravelFriend"
+        <table tableName="album_file" schema="TravelFriend"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false"></table>

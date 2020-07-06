@@ -5,6 +5,8 @@ import com.sbzze.travelfriend.dto.FileChunkDto;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mock.web.MockMultipartFile;
@@ -267,14 +269,15 @@ public class FileUtil {
      * @param fileChunkDto
      * @return
      */
-    public static File sliceUpload( String filePath, FileChunkDto fileChunkDto ) {
+    public static Pair<Boolean ,File> sliceUpload( String filePath, FileChunkDto fileChunkDto ) {
         return uploadByMappedByteBuffer(filePath, fileChunkDto);
     }
 
 
     // mapped上传方式
-    public static File uploadByMappedByteBuffer( String filePath, FileChunkDto fileChunkDto ) {
+    public static Pair<Boolean ,File> uploadByMappedByteBuffer(String filePath, FileChunkDto fileChunkDto ) {
         boolean isFinish = false;
+        boolean isChunkUpload = false;
         File file = null;
         String tempFileName = filePath + "temp_" + fileChunkDto.getFilename();
         File tempFile = new File(tempFileName);
@@ -301,15 +304,20 @@ public class FileUtil {
 
             isFinish = checkAndSetUploadProgress(fileChunkDto, filePath);
 
+            // 文件块全部上传完成
             if (isFinish) {
-                 file = FileNameUtil.renameFile(tempFile, fileChunkDto.getFilename());
-                 tempFile.delete();
+                isChunkUpload = true;
+                file = FileNameUtil.renameFile(tempFile, fileChunkDto.getFilename());
+                tempFile.delete();
+            } else {
+                isChunkUpload = true;
             }
         } catch (IOException e) {
+            isChunkUpload = false;
             log.error("mappedByteBuffer上传失败",LogsUtil.getStackTrace(e));
         }
-
-        return file;
+        Pair<Boolean, File> pair = new ImmutablePair<>(isChunkUpload, file);
+        return pair;
     }
 
     // 检查并修改文件上传进度

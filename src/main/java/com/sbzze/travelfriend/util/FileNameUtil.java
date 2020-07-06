@@ -91,7 +91,7 @@ public class FileNameUtil {
 
         String filePath = toBeRenamed.getParent();
         File newFile = new File(filePath + File.separatorChar + toFileNewName);
-
+        /*
         try {
             FileInputStream inputStream = new FileInputStream(toBeRenamed);
             FileOutputStream outputStream = new FileOutputStream(newFile);
@@ -107,10 +107,12 @@ public class FileNameUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        */
 
-        toBeRenamed.delete();
+        if (!toBeRenamed.renameTo(newFile)) {
+            log.error("文件重命名失败");
+            return null;
+        }
         return newFile;
-
-
     }
 }
