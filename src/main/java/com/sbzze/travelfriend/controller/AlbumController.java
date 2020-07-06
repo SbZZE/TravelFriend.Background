@@ -6,6 +6,7 @@ import com.sbzze.travelfriend.filter.UserLoginToken;
 import com.sbzze.travelfriend.model.ResultView;
 import com.sbzze.travelfriend.service.*;
 import com.sbzze.travelfriend.util.Constants;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,7 @@ public class AlbumController {
     private AlbumFileService albumFileService;
 
     // 新建相册
+    @ApiOperation("新建相册")
     @UserLoginToken
     @PostMapping("/create")
     public Object addAlbum( AlbumDto.AlbumAddDto albumAddDto, @RequestParam MultipartFile cover ) {
@@ -42,6 +44,7 @@ public class AlbumController {
     }
 
     // 获取相册封面
+    @ApiOperation("获取相册封面")
     @UserLoginToken
     @GetMapping("/cover")
     @ResponseBody
@@ -59,6 +62,7 @@ public class AlbumController {
     }
 
     // 修改相册信息(不含相册封面)
+    @ApiOperation("修改相册信息(不含相册封面)")
     @UserLoginToken
     @PostMapping("/info")
     public Object updateAlbumInfo( @RequestBody AlbumDto.AlbumInfoDto albumInfoDto) {
@@ -74,6 +78,7 @@ public class AlbumController {
     }
 
     // 获取相册文件列表
+    @ApiOperation("获取相册文件列表")
     @UserLoginToken
     @GetMapping("/file/list")
     @ResponseBody
@@ -102,6 +107,7 @@ public class AlbumController {
     }
 
     // 获取文件缩略图
+    @ApiOperation("获取文件缩略图")
     @UserLoginToken
     @GetMapping("/file/thumb")
     @ResponseBody

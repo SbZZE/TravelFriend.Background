@@ -329,7 +329,7 @@ public class FileUtil {
 
         try {
             RandomAccessFile accessFile = new RandomAccessFile(confFile, "rw");
-            System.out.println("N0." + fileChunkDto.getChunknumber() + " completed");
+            log.info("N0." + fileChunkDto.getChunknumber() + " completed");
 
             //创建conf文件文件长度为总分片数，每上传一个分块即向conf文件中写入一个127，那么没上传的位置就是默认0,已上传的就是Byte.MAX_VALUE 127
             accessFile.setLength(fileChunkDto.getTotalchunks());
@@ -342,7 +342,7 @@ public class FileUtil {
             for (int i = 0; i < completeList.length && isComplete == Byte.MAX_VALUE; i++) {
                 //与运算, 如果有部分没有完成则 isComplete 不是 Byte.MAX_VALUE
                 isComplete = (byte) (isComplete & completeList[i]);
-                System.out.println("check part " + i + " complete?:" + completeList[i]);
+                log.warn("check part " + i + " complete?:" + completeList[i]);
             }
 
             accessFile.close();

@@ -7,6 +7,7 @@ import com.sbzze.travelfriend.filter.UserLoginToken;
 import com.sbzze.travelfriend.service.UserService;
 import com.sbzze.travelfriend.service.UserTokenService;
 import com.sbzze.travelfriend.util.*;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,7 @@ public class UserController {
 
 
     // 登录
+    @ApiOperation("登录")
     @PassToken
     @GetMapping("/login")
     public Object login( String username, String password ){
@@ -52,6 +54,7 @@ public class UserController {
     }
 
     // 注册
+    @ApiOperation("注册")
     @PassToken
     @PostMapping("/register")
     public Object register( @RequestBody UserDto.UserRegisterDto userRegisterDto ) {
@@ -78,6 +81,7 @@ public class UserController {
 
 
     // 获取个人资料(不包含头像)
+    @ApiOperation("获取个人资料(不包含头像)")
     @UserLoginToken
     @GetMapping("/userInfo")
     public Object getUserInfoWithOutAvatar( String username ) {
@@ -92,7 +96,8 @@ public class UserController {
     }
 
 
-    // 修改个人资料 (不包含头像)
+    // 修改个人资料(不包含头像)
+    @ApiOperation("修改个人资料(不包含头像)")
     @UserLoginToken
     @PostMapping("/userInfo")
     public Object updateUserInfoWithOutAvatar( @RequestBody UserDto.UserInfoWithOutAvatarDto userInfoWithOutAvatarDto ) {
@@ -114,6 +119,7 @@ public class UserController {
 
 
     // 修改头像
+    @ApiOperation("修改头像")
     @UserLoginToken
     @PostMapping("/avatar")
     public Object updateUserAdatar(@RequestParam String username, @RequestBody MultipartFile avatar ) {
@@ -143,6 +149,7 @@ public class UserController {
 
 
     // 获取头像
+    @ApiOperation("获取头像")
     @UserLoginToken
     @GetMapping("/avatar")
     @ResponseBody
@@ -153,23 +160,6 @@ public class UserController {
             return userService.getAvatar(username);
         } else {
             return null;
-        }
-    }
-
-    //注销账号
-    @UserLoginToken
-    @DeleteMapping("/cancel")
-    public Object cancel(String username){
-        User userForBase = userService.findUserByName(username);
-        if ( null == userForBase) {
-            return CancelModelUtil.cancelErrorByNotExist();
-        }
-        int flag = userService.deleteUser(username);
-        if ( flag <= 0){
-            return CancelModelUtil.cancelErrorByDelete();
-        }
-        else {
-            return CancelModelUtil.cancelSuccess();
         }
     }
 

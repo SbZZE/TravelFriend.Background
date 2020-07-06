@@ -8,6 +8,7 @@ import com.sbzze.travelfriend.service.UserService;
 import com.sbzze.travelfriend.service.UserTokenService;
 import com.sbzze.travelfriend.util.CancelModelUtil;
 import com.sbzze.travelfriend.util.TeamResultViewModelUtil;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,6 +36,7 @@ public class TeamMemberController {
     private TeamMemberService teamMemberService;
 
     //邀请团队成员
+    @ApiOperation("邀请团队成员")
     @UserLoginToken
     @PostMapping
     public Object addTeamMember(String teamid , String username){
@@ -55,6 +57,7 @@ public class TeamMemberController {
     }
 
     //踢出团队成员
+    @ApiOperation("踢出团队成员")
     @UserLoginToken
     @DeleteMapping
     public Object deleteUser(String teamid , String username){

@@ -10,6 +10,7 @@ import com.sbzze.travelfriend.service.UserService;
 import com.sbzze.travelfriend.service.UserTokenService;
 import com.sbzze.travelfriend.util.FileUtil;
 import com.sbzze.travelfriend.util.TeamResultViewModelUtil;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +46,7 @@ public class TeamController {
     private String teams[] = null;
 
     //获取该用户的所有团队
+    @ApiOperation("获取该用户的所有团队")
     @UserLoginToken
     @GetMapping("/teams")
     public Object teams(String username){
@@ -59,6 +61,7 @@ public class TeamController {
     }
 
     //获取团队头像
+    @ApiOperation("获取团队头像")
     @UserLoginToken
     @GetMapping("/avatar")
     @ResponseBody
@@ -73,6 +76,7 @@ public class TeamController {
     }
 
     //创建团队
+    @ApiOperation("创建团队")
     @UserLoginToken
     @PostMapping("/create")
     public Object createTeam(@RequestBody TeamDto.TeamCreateDto teamCreateDto){
@@ -98,6 +102,7 @@ public class TeamController {
     }
 
     //修改团队信息不包括头像
+    @ApiOperation("修改团队信息不包括头像")
     @UserLoginToken
     @PostMapping("/teaminfo")
     public Object updateTeamInfoWithOutAvatar(@RequestBody TeamDto.TeamInfoWithOutAvatarDto teamInfoWithOutAvatarDto){
@@ -117,6 +122,7 @@ public class TeamController {
     }
 
     //上传团队头像
+    @ApiOperation("上传团队头像")
     @UserLoginToken
     @PostMapping("/avatar")
     public Object updateTeamAvatar(@RequestParam String teamid , @RequestParam MultipartFile avatar){
@@ -143,6 +149,7 @@ public class TeamController {
     }
 
     //获取团队成员
+    @ApiOperation("获取团队成员")
     @UserLoginToken
     @GetMapping("/member")
     public Object getTeamMember(String teamid){
