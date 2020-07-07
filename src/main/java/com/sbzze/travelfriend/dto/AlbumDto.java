@@ -26,4 +26,12 @@ public class AlbumDto {
         private MultipartFile cover;
     }
 
+    @Data
+    public static class AlbumInfoWithCountDto {
+        private String albumid;
+        private String albumname;
+        private String introduction;
+        private int count;
+    }
+
 }

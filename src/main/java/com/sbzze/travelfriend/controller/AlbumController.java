@@ -120,4 +120,19 @@ public class AlbumController {
             return new ResultView<>(200, "获取文件缩略图成功", compressFile);
         }
     }
+
+    // 获取所有相册
+    @ApiOperation("获取所有相册")
+    @UserLoginToken
+    @GetMapping("/list")
+    @ResponseBody
+    public Object getAlbums( @RequestParam String targetid, @RequestParam String target ) {
+        List<AlbumDto.AlbumInfoWithCountDto> albums;
+        albums = albumService.getAlbums(targetid, target);
+        if ( albums.size() <= 0 ) {
+            return new ResultView<>(201, "获取所有相册失败");
+        } else {
+            return new ResultView<>(200, "获取所有相册成功", albums);
+        }
+    }
 }

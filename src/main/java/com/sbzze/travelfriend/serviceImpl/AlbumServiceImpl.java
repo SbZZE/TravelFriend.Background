@@ -1,5 +1,7 @@
 package com.sbzze.travelfriend.serviceImpl;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.sbzze.travelfriend.dto.AlbumDto;
 import com.sbzze.travelfriend.entity.Album;
 import com.sbzze.travelfriend.mapper.AlbumMapper;
@@ -10,6 +12,9 @@ import com.sbzze.travelfriend.util.FileUtil;
 import com.sbzze.travelfriend.util.UUIDUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Slf4j
@@ -137,6 +142,42 @@ public class AlbumServiceImpl extends BaseServiceImpl<AlbumMapper, Album> implem
         album.setIntroduction(introduction);
 
         return baseMapper.updateById(album);
+    }
+
+    /**
+     * 获取相册信息
+     * @param targetId
+     * @param target
+     * @return
+     */
+    @Override
+    public List<AlbumDto.AlbumInfoWithCountDto> getAlbums(String targetId, String target ) {
+        Wrapper<Album> wrapper = new EntityWrapper<>();
+        String type = null;
+
+        if (Integer.valueOf(target) == Constants.USER_INT) {
+            type = Constants.USER;
+        }
+        if (Integer.valueOf(target) == Constants.TEAM_INT) {
+            type = Constants.TEAM;
+        }
+        wrapper.eq("type", type);
+        wrapper.eq("type_id", targetId);
+
+        List<Album> albums = baseMapper.selectList(wrapper);
+
+        List<AlbumDto.AlbumInfoWithCountDto> dtos = new ArrayList<>();
+        AlbumDto.AlbumInfoWithCountDto dto = new AlbumDto.AlbumInfoWithCountDto();
+        for (Album album : albums) {
+            dto.setAlbumid(album.getId());
+            dto.setAlbumname(album.getAlbumname());
+            dto.setCount(album.getCount());
+            dto.setIntroduction(album.getIntroduction());
+
+            dtos.add(dto);
+        }
+
+        return dtos;
     }
 
 }
