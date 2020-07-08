@@ -28,7 +28,7 @@ public class Album {
     private String introduction;
 
     @TableField("count")
-    private Integer count;
+    private int count;
 
     @TableField("cover")
     private String cover;
