@@ -4,8 +4,6 @@ import com.baomidou.mybatisplus.service.IService;
 import com.sbzze.travelfriend.dto.AlbumDto;
 import com.sbzze.travelfriend.entity.Album;
 
-import java.util.List;
-
 
 public interface AlbumService extends IService<Album> {
     /**
@@ -48,11 +46,4 @@ public interface AlbumService extends IService<Album> {
      */
     int updateAlbumInfo(String id, String albumname, String introduction);
 
-    /**
-     * 获取相册信息
-     * @param targetId
-     * @param target
-     * @return
-     */
-    List<AlbumDto.AlbumInfoWithCountDto> getAlbums(String targetId, String target);
 }

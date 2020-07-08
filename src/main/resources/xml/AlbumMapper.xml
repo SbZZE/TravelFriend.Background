@@ -8,7 +8,7 @@
       <arg column="type_id" jdbcType="CHAR" javaType="java.lang.String" />
       <arg column="albumname" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="introduction" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="count" jdbcType="Integer" javaType="java.lang.Integer" />
+      <arg column="count" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="cover" jdbcType="VARCHAR" javaType="java.lang.String" />
     </constructor>
   </resultMap>
