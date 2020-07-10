@@ -91,23 +91,6 @@ public class FileNameUtil {
 
         String filePath = toBeRenamed.getParent();
         File newFile = new File(filePath + File.separatorChar + toFileNewName);
-        /*
-        try {
-            FileInputStream inputStream = new FileInputStream(toBeRenamed);
-            FileOutputStream outputStream = new FileOutputStream(newFile);
-            int len=0;
-            //一次读取多少字节的文件,这里可以选择tmp.txt的所有字节长度
-            byte[] b = new byte[inputStream.available()];
-            while((len=inputStream.read(b))!=-1){
-                outputStream.write(b,0,len);
-                outputStream.flush();
-            }
-            inputStream.close();
-            outputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        */
 
         if (!toBeRenamed.renameTo(newFile)) {
             log.error("文件重命名失败");

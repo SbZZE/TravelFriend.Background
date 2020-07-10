@@ -165,7 +165,7 @@ public class FileUtil {
      */
     public static byte[] downloadFileBytes( String url ) {
 
-        if (url.isEmpty()) {
+        if (url == null || url.length() == 0) {
             return null;
         }
 
@@ -198,7 +198,6 @@ public class FileUtil {
             File tempFile = File.createTempFile("temp", ".png");
             URL httpUrl = new URL(url);
             ImageIO.write(ImageIO.read(httpUrl), "PNG", tempFile);
-
             Thumbnails.of(tempFile)
                     .size(width, height)
                     .keepAspectRatio(false)
@@ -209,7 +208,7 @@ public class FileUtil {
             tempFile.delete();
             return bytes;
         } catch (IOException e) {
-            log.error("文件下载失败", LogsUtil.getStackTrace(e));
+            log.error("指定宽高文件下载失败", LogsUtil.getStackTrace(e));
             return null;
         }
     }
@@ -222,7 +221,8 @@ public class FileUtil {
      * @param prefix
      * @return
      */
-    public static boolean compressFile( MultipartFile file, String filePath, String changedFileName, String prefix, float scale, float outputQuality ) {
+    //TODO
+    public static boolean compressFile( File file, String filePath, String changedFileName, String prefix, float scale, float outputQuality ) {
 
         String fileName = filePath + prefix + changedFileName;
 
@@ -231,10 +231,32 @@ public class FileUtil {
             tempFile.getParentFile().mkdirs();
         }
         try {
-            Thumbnails.of(file.getInputStream())
+            Thumbnails.of(file)
                       .scale(scale)
                       .outputQuality(outputQuality)
                       .toFile(tempFile);
+
+            return true;
+        } catch (IOException e) {
+            log.error("图片压缩上传失败", LogsUtil.getStackTrace(e));
+            return false;
+        }
+    }
+
+    public static boolean compressFile( MultipartFile file, String filePath, String changedFileName, String prefix, float scale, float outputQuality ) {
+
+        String fileName = filePath + prefix + changedFileName;
+
+        File tempFile = new File(fileName);
+        if (!tempFile.getParentFile().exists()) {
+            tempFile.getParentFile().mkdirs();
+        }
+
+        try {
+            Thumbnails.of(file.getInputStream())
+                    .scale(scale)
+                    .outputQuality(outputQuality)
+                    .toFile(tempFile);
 
             file.getInputStream().close();
             return true;
@@ -412,18 +434,18 @@ public class FileUtil {
 
 
     /**
-     * MultipartFile转File
+     * File转MultipartFile
      * @param file
      * @return
      */
-    public static MultipartFile transferMultipartFileToFile( File file ) {
+    public static MultipartFile transferFileToMultipartFile( File file ) {
         MultipartFile multipartFile = null;
         try {
             FileInputStream input = new FileInputStream(file);
             multipartFile = new MockMultipartFile("file", file.getName(), "text/plain", IOUtils.toByteArray(input));
             input.close();
         } catch (IOException e) {
-            log.error("MultipartFile转File失败",LogsUtil.getStackTrace(e));
+            log.error("File转MultipartFile失败",LogsUtil.getStackTrace(e));
         }
         return multipartFile;
     }

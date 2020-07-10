@@ -71,13 +71,14 @@ public class TeamServiceImpl extends BaseServiceImpl<TeamMapper, Team>  implemen
     }
 
     @Override
-    public byte[] getCompressTeamAvatar(String teamid){
+    public byte[] getCompressTeamAvatar(String teamid, String width, String height){
         Team team = baseMapper.findTeamById(teamid);
         if (null == team){
             return null;
         }
         String avatarUrl = team.getCompressAvatar();
-        byte[] fileBytes = FileUtil.downloadFileBytes(avatarUrl);
+        byte[] fileBytes = FileUtil.downloadFileBytesByWidthAndHeight(avatarUrl, Integer.valueOf(width), Integer.valueOf(height));
+
         return fileBytes;
     }
 

@@ -30,7 +30,7 @@ public interface TeamService extends IService<Team> {
 
     byte[] getTeamAvatar(String teamid);//获取团队头像
 
-    byte[] getCompressTeamAvatar(String teamid);//获取团头像缩略图
+    byte[] getCompressTeamAvatar(String teamid, String width, String height);//获取团头像缩略图
 
     List<Object> getTeamMember(String teamid);//获取团队成员
 

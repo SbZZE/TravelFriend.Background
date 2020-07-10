@@ -33,7 +33,7 @@ public class UserController {
     @ApiOperation("登录")
     @PassToken
     @GetMapping("/login")
-    public Object login( String username, String password ){
+    public Object login( @RequestParam String username, @RequestParam String password ){
 
         User userForBase = userService.findUserByName(username);
 
@@ -84,7 +84,7 @@ public class UserController {
     @ApiOperation("获取个人资料(不包含头像)")
     @UserLoginToken
     @GetMapping("/userInfo")
-    public Object getUserInfoWithOutAvatar( String username ) {
+    public Object getUserInfoWithOutAvatar( @RequestParam String username ) {
 
         User userForBase = userService.findUserByName(username);
 
@@ -153,7 +153,7 @@ public class UserController {
     @UserLoginToken
     @GetMapping("/avatar")
     @ResponseBody
-    public byte[] getUserAvatar(String username, String isCompress, String width, String height){
+    public byte[] getUserAvatar(@RequestParam String username, @RequestParam String isCompress, @RequestParam String width, @RequestParam String height){
         if (isCompress.equals("true")) {
             return userService.getCompressAvatar(username, width, height);
         } else if (isCompress.equals("false")){

@@ -49,7 +49,7 @@ public class TeamController {
     @ApiOperation("获取该用户的所有团队")
     @UserLoginToken
     @GetMapping("/teams")
-    public Object teams(String username){
+    public Object teams(@RequestParam String username){
         User userForBase = userService.findUserByName(username);
         List<Object> teamForBase = teamService.getTeamInfo(userForBase.getId());
         if (null == teamForBase){
@@ -65,9 +65,9 @@ public class TeamController {
     @UserLoginToken
     @GetMapping("/avatar")
     @ResponseBody
-    public byte[] getTeamAvatar(String teamid , String isCompress){
+    public byte[] getTeamAvatar(@RequestParam String teamid , @RequestParam String isCompress, @RequestParam String width, @RequestParam String height){
         if (isCompress.equals("true")) {
-            return teamService.getCompressTeamAvatar(teamid);
+            return teamService.getCompressTeamAvatar(teamid, width, height);
         } else if (isCompress.equals("false")){
             return teamService.getTeamAvatar(teamid);
         } else {
@@ -125,7 +125,7 @@ public class TeamController {
     @ApiOperation("上传团队头像")
     @UserLoginToken
     @PostMapping("/avatar")
-    public Object updateTeamAvatar(@RequestParam String teamid , @RequestParam MultipartFile avatar){
+    public Object updateTeamAvatar(@RequestParam String teamid , @RequestBody MultipartFile avatar){
         if ( avatar.isEmpty() ) {
             return TeamResultViewModelUtil.updateTeamAvatarError();
         }
@@ -152,7 +152,7 @@ public class TeamController {
     @ApiOperation("获取团队成员")
     @UserLoginToken
     @GetMapping("/member")
-    public Object getTeamMember(String teamid){
+    public Object getTeamMember(@RequestParam String teamid){
 
 
         return TeamResultViewModelUtil.getTeamMemberSuccess(teamService.getTeamMember(teamid));
