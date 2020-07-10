@@ -148,7 +148,7 @@ public class AlbumFileServiceImpl extends BaseServiceImpl<AlbumFileMapper, Album
             fileId = insert(fileChunkDto.getAlbumid(), fileType, insertFileName, null);
 
             //生成压缩图
-            MultipartFile multipartFile = FileUtil.transferMultipartFileToFile(tempFile);
+            MultipartFile multipartFile = FileUtil.transferFileToMultipartFile(tempFile);
             if (fileType.equals(Constants.IMAGE)) {
                 FileUtil.compressFile(multipartFile, filePath, fileChunkDto.getFilename(), PREFIX, 1f, 0.2f);
 
