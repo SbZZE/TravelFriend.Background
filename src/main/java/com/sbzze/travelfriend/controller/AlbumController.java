@@ -48,16 +48,16 @@ public class AlbumController {
     @UserLoginToken
     @GetMapping("/cover")
     @ResponseBody
-    public Object getAlbumCover( @RequestParam String albumid, @RequestParam String width, @RequestParam String height ) {
+    public byte[] getAlbumCover( @RequestParam String albumid, @RequestParam String width, @RequestParam String height ) {
         if ( !albumService.isAlbumExist(albumid) ) {
-            return new ResultView<>(201, "相册不存在");
+            return null;
         }
         byte[] file = albumService.getAlbumCover(albumid, width, height);
         if ( file == null ) {
             log.error("获取相册封面失败");
-            return new ResultView<>(202, "获取相册封面失败");
+            return null;
         } else {
-            return new ResultView<>(200, "获取相册封面成功", file);
+            return file;
         }
     }
 
@@ -111,13 +111,13 @@ public class AlbumController {
     @UserLoginToken
     @GetMapping("/file/thumb")
     @ResponseBody
-    public Object getCompressFile( @RequestParam String fileid, @RequestParam String width, @RequestParam String height ) {
+    public byte[] getCompressFile( @RequestParam String fileid, @RequestParam String width, @RequestParam String height ) {
         byte[] compressFile = albumFileService.getCompressFile(fileid, width, height);
         if ( null == compressFile ) {
             log.error("获取文件缩略图失败");
-            return new ResultView<>(201, "获取文件缩略图失败");
+            return null;
         } else {
-            return new ResultView<>(200, "获取文件缩略图成功", compressFile);
+            return compressFile;
         }
     }
 
