@@ -168,14 +168,16 @@ public class AlbumServiceImpl extends BaseServiceImpl<AlbumMapper, Album> implem
         List<Album> albums = baseMapper.selectList(wrapper);
 
         List<AlbumDto.AlbumInfoWithCountDto> dtos = new ArrayList<>();
-        AlbumDto.AlbumInfoWithCountDto dto = new AlbumDto.AlbumInfoWithCountDto();
+
         for (Album album : albums) {
+            AlbumDto.AlbumInfoWithCountDto dto = new AlbumDto.AlbumInfoWithCountDto();
             dto.setAlbumid(album.getId());
             dto.setAlbumname(album.getAlbumname());
             dto.setCount(album.getCount());
             dto.setIntroduction(album.getIntroduction());
 
             dtos.add(dto);
+            dto = null;
         }
 
         return dtos;

@@ -92,8 +92,9 @@ public class AlbumController {
             return new ResultView<>(202, "获取相册文件列表失败");
         }
         List<AlbumDto.AlbumFileInfoDto> dtos = new ArrayList<>();
-        AlbumDto.AlbumFileInfoDto dto = new AlbumDto.AlbumFileInfoDto();
+
         for (AlbumFile albumFile : albumFiles) {
+            AlbumDto.AlbumFileInfoDto dto = new AlbumDto.AlbumFileInfoDto();
             dto.setFileid(albumFile.getId());
             if (albumFile.getType().equals(Constants.IMAGE)){
                 dto.setType(Constants.IMAGE_INT);
