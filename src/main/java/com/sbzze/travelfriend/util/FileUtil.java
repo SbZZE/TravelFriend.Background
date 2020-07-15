@@ -222,27 +222,6 @@ public class FileUtil {
      * @return
      */
     //TODO
-    public static boolean compressFile( File file, String filePath, String changedFileName, String prefix, float scale, float outputQuality ) {
-
-        String fileName = filePath + prefix + changedFileName;
-
-        File tempFile = new File(fileName);
-        if (!tempFile.getParentFile().exists()) {
-            tempFile.getParentFile().mkdirs();
-        }
-        try {
-            Thumbnails.of(file)
-                      .scale(scale)
-                      .outputQuality(outputQuality)
-                      .toFile(tempFile);
-
-            return true;
-        } catch (IOException e) {
-            log.error("图片压缩上传失败", LogsUtil.getStackTrace(e));
-            return false;
-        }
-    }
-
     public static boolean compressFile( MultipartFile file, String filePath, String changedFileName, String prefix, float scale, float outputQuality ) {
 
         String fileName = filePath + prefix + changedFileName;

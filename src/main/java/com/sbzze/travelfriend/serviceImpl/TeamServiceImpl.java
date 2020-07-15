@@ -139,7 +139,7 @@ public class TeamServiceImpl extends BaseServiceImpl<TeamMapper, Team>  implemen
         }
 
         //压缩图片并上传
-        if (!FileUtil.compressFile(file, filePath, changedFileName, PREFIX, 1f, 0.2f)) {
+        if (!FileUtil.compressFile(file, filePath, changedFileName, PREFIX, 0.5f, 0.2f)) {
             return -1;
         }
         String urlPath = FileNameUtil.getUrlPath(POST, SON_PATH, TEAM + "/" + AVATAR, teamid);

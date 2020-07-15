@@ -86,7 +86,7 @@ public class AlbumServiceImpl extends BaseServiceImpl<AlbumMapper, Album> implem
         // /ROOT_PATH/SON_PATH/${type}/album/${typeid}/${albumid}/cover/
         filePath = FileNameUtil.getFilePath(ROOT_PATH, SON_PATH, signName, tagName);
 
-        if ( !FileUtil.compressFile(albumAddDto.getCover(), filePath, changedFileName, PREFIX, 1f, 0.2f) ) {
+        if ( !FileUtil.compressFile(albumAddDto.getCover(), filePath, changedFileName, PREFIX, 0.5f, 0.2f) ) {
             log.error("相册封面上传失败");
             return null;
         }

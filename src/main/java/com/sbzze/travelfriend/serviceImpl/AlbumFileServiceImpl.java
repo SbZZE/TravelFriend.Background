@@ -150,7 +150,7 @@ public class AlbumFileServiceImpl extends BaseServiceImpl<AlbumFileMapper, Album
             //生成压缩图
             MultipartFile multipartFile = FileUtil.transferFileToMultipartFile(tempFile);
             if (fileType.equals(Constants.IMAGE)) {
-                FileUtil.compressFile(multipartFile, filePath, fileChunkDto.getFilename(), PREFIX, 1f, 0.2f);
+                FileUtil.compressFile(multipartFile, filePath, fileChunkDto.getFilename(), PREFIX, 0.5f, 0.2f);
 
             }
             if (fileType.equals(Constants.VIDEO)) {
