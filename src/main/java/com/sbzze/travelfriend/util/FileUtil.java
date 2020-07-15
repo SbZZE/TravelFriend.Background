@@ -172,7 +172,7 @@ public class FileUtil {
         try {
             URL httpUrl = new URL(url);
 
-            File tempFile = File.createTempFile("temp" + UUIDUtil.getUUID(), ".png");
+            File tempFile = File.createTempFile("temp", ".png");
             ImageIO.write(ImageIO.read(httpUrl), "PNG", tempFile);
             byte[] bytes = FileUtils.readFileToByteArray(tempFile);
 
@@ -195,7 +195,7 @@ public class FileUtil {
      */
     public static byte[] downloadFileBytesByWidthAndHeight( String url , int width, int height ) {
         try {
-            File tempFile = File.createTempFile("temp" + UUIDUtil.getUUID(), ".png");
+            File tempFile = File.createTempFile("temp", ".png");
             URL httpUrl = new URL(url);
             ImageIO.write(ImageIO.read(httpUrl), "PNG", tempFile);
             Thumbnails.of(tempFile)
