@@ -48,11 +48,11 @@ public class AlbumController {
     @UserLoginToken
     @GetMapping("/cover")
     @ResponseBody
-    public byte[] getAlbumCover( @RequestParam String albumid, @RequestParam String width, @RequestParam String height ) {
+    public byte[] getAlbumCover( @RequestParam String albumid ) {
         if ( !albumService.isAlbumExist(albumid) ) {
             return null;
         }
-        byte[] file = albumService.getAlbumCover(albumid, width, height);
+        byte[] file = albumService.getAlbumCover(albumid);
         if ( file == null ) {
             log.error("获取相册封面失败");
             return null;
@@ -112,8 +112,8 @@ public class AlbumController {
     @UserLoginToken
     @GetMapping("/file/thumb")
     @ResponseBody
-    public byte[] getCompressFile( @RequestParam String fileid, @RequestParam String width, @RequestParam String height ) {
-        byte[] compressFile = albumFileService.getCompressFile(fileid, width, height);
+    public byte[] getCompressFile( @RequestParam String fileid ) {
+        byte[] compressFile = albumFileService.getCompressFile(fileid);
         if ( null == compressFile ) {
             log.error("获取文件缩略图失败");
             return null;

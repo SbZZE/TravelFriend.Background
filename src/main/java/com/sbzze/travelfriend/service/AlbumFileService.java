@@ -18,11 +18,10 @@ public interface AlbumFileService extends IService<AlbumFile> {
     /**
      * 获取文件缩略图
      * @param fileid
-     * @param width
-     * @param height
+
      * @return
      */
-    byte[] getCompressFile(String fileid, String width, String height);
+    byte[] getCompressFile(String fileid);
 
     /**
      * 新增照片或视频

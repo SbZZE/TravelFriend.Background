@@ -31,13 +31,12 @@ public interface AlbumService extends IService<Album> {
     String addAlbum(AlbumDto.AlbumAddDto albumAddDto);
 
     /**
-     * 根据相册ID获取指定宽高相册封面
+     * 根据相册ID获取相册封面
      * @param albumid
-     * @param width
-     * @param height
+
      * @return
      */
-    byte[] getAlbumCover(String albumid, String width, String height);
+    byte[] getAlbumCover(String albumid);
 
     /**
      * 修改相册信息(不含相册封面)

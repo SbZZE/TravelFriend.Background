@@ -109,14 +109,12 @@ public class AlbumServiceImpl extends BaseServiceImpl<AlbumMapper, Album> implem
     }
 
     /**
-     * 根据相册ID获取指定宽高相册封面
+     * 根据相册ID获取相册封面
      * @param albumid
-     * @param width
-     * @param height
      * @return
      */
     @Override
-    public byte[] getAlbumCover(String albumid, String width, String height) {
+    public byte[] getAlbumCover(String albumid) {
         Album album = baseMapper.selectById(albumid);
 
         if ( null == album || null == album.getCover()) {
@@ -125,7 +123,7 @@ public class AlbumServiceImpl extends BaseServiceImpl<AlbumMapper, Album> implem
 
         String coverUrl = album.getCover();
 
-        byte[] fileBytes = FileUtil.downloadFileBytesByWidthAndHeight(coverUrl, Integer.valueOf(width), Integer.valueOf(height));
+        byte[] fileBytes = FileUtil.downloadFileBytes(coverUrl);
         return fileBytes;
     }
 

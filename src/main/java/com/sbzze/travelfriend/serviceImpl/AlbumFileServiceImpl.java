@@ -39,19 +39,17 @@ public class AlbumFileServiceImpl extends BaseServiceImpl<AlbumFileMapper, Album
     /**
      * 获取文件缩略图
      * @param fileid
-     * @param width
-     * @param height
      * @return
      */
     @Override
-    public byte[] getCompressFile( String fileid,  String width,  String height) {
+    public byte[] getCompressFile( String fileid ) {
         AlbumFile albumFile = baseMapper.selectById(fileid);
         if ( null == albumFile || null == albumFile.getCompressAddress() ) {
             return null;
         }
         String coverUrl = albumFile.getCompressAddress();
 
-        byte[] fileBytes = FileUtil.downloadFileBytesByWidthAndHeight(coverUrl, Integer.valueOf(width), Integer.valueOf(height));
+        byte[] fileBytes = FileUtil.downloadFileBytes(coverUrl);
         return fileBytes;
     }
 
