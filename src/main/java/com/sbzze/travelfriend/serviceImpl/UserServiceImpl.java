@@ -87,7 +87,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
         }
 
         //压缩图片并上传
-       if ( !FileUtil.compressFile(file, filePath, changedFileName, PREFIX, 0.5f, 0.2f) ) {
+       if ( !FileUtil.compressFile(file, filePath, changedFileName, PREFIX) ) {
            log.error("用户压缩头像更新失败");
            return -1;
        }

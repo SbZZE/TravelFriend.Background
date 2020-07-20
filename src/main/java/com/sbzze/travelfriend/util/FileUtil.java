@@ -245,6 +245,29 @@ public class FileUtil {
         }
     }
 
+    public static boolean compressFile( MultipartFile file, String filePath, String changedFileName, String prefix ) {
+
+        String fileName = filePath + prefix + changedFileName;
+
+        File tempFile = new File(fileName);
+        if (!tempFile.getParentFile().exists()) {
+            tempFile.getParentFile().mkdirs();
+        }
+
+        try {
+            Thumbnails.of(file.getInputStream())
+                    .scale(0.1f)
+                    .outputQuality(0.2f)
+                    .toFile(tempFile);
+
+            file.getInputStream().close();
+            return true;
+        } catch (IOException e) {
+            log.error("图片压缩上传失败", LogsUtil.getStackTrace(e));
+            return false;
+        }
+    }
+
     /**
      * 上传相册
      * @param filePath
